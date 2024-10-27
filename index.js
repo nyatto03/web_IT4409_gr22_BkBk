@@ -9,7 +9,6 @@ const app = express()
 dotenv.config()
 
 const connect = async () => {
-    console.log("Attempting to connect to MongoDB...");
     try {
       await mongoose.connect(process.env.MONGO);
       console.log("Connected to mongoDB.");
