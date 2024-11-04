@@ -1,39 +1,121 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useContext } from "react";
+
+import { AuthContext } from "./context/AuthContext";
+import Login from "./pages/login/Login";
+import Home from "./pages/home/Home";
+import List from "./pages/list/List";
+import Single from "./pages/single/Single";
+import New from "./pages/new/New";
+import NewHotel from "./pages/newHotel/NewHotel";
+import NewRoom from "./pages/newRoom/NewRoom";
+
 import "./style/dark.scss";
 
+
+
 function App() {
+    const ProtectedRoute = ({ children }) => {
+        const { user } = useContext(AuthContext);
+
+        if (!user) {
+            return <Navigate to="/login" />;
+        }
+
+        return children;
+    };
+
     return (
-        <div>
+        <div className="app">
             <BrowserRouter>
                 <Routes>
                     <Route path="/">
-                        <Route index element={<h1>homepage</h1>} />
+                        <Route path="login" element={<Login />} />
+                        <Route
+                            index
+                            element={
+                                <ProtectedRoute>
+                                    <Home />
+                                </ProtectedRoute>
+                            }
+                        />
                         <Route path="users">
-                            <Route index element={<h1>userpage</h1>} />
+                            <Route
+                                index
+                                element={
+                                    <ProtectedRoute>
+                                        <List />
+                                    </ProtectedRoute>
+                                }
+                            />
                             <Route
                                 path=":userId"
-                                element={<h1>userpage/userId</h1>}
-                            />
-                            <Route path="new" element={<h1>newpage</h1>} />
-                        </Route>
-                        <Route path="hotels">
-                            <Route index element={<h1>hotelspage</h1>} />
-                            <Route
-                                path=":productId"
-                                element={<h1>hotelspage/productId</h1>}
+                                element={
+                                    <ProtectedRoute>
+                                        <Single />
+                                    </ProtectedRoute>
+                                }
                             />
                             <Route
                                 path="new"
-                                element={<h1>hotelspage/new</h1>}
+                                element={
+                                    <ProtectedRoute>
+                                        <New />
+                                    </ProtectedRoute>
+                                }
+                            />
+                        </Route>
+                        <Route path="hotels">
+                            <Route
+                                index
+                                element={
+                                    <ProtectedRoute>
+                                        <List />
+                                    </ProtectedRoute>
+                                }
+                            />
+                            <Route
+                                path=":productId"
+                                element={
+                                    <ProtectedRoute>
+                                        <Single />
+                                    </ProtectedRoute>
+                                }
+                            />
+                            <Route
+                                path="new"
+                                element={
+                                    <ProtectedRoute>
+                                        <NewHotel />
+                                    </ProtectedRoute>
+                                }
                             />
                         </Route>
                         <Route path="rooms">
-                            <Route index element={<h1>rooms</h1>} />
+                            <Route
+                                index
+                                element={
+                                    <ProtectedRoute>
+                                        <List />
+                                    </ProtectedRoute>
+                                }
+                            />
                             <Route
                                 path=":productId"
-                                element={<h1>rooms/productId</h1>}
+                                element={
+                                    <ProtectedRoute>
+                                        <Single />
+                                    </ProtectedRoute>
+                                }
                             />
-                            <Route path="new" element={<h1>rooms/new</h1>} />
+                            <Route
+                                path="new"
+                                element={
+                                    <ProtectedRoute>
+                                        <NewRoom />
+                                    </ProtectedRoute>
+                                }
+                            />
                         </Route>
                     </Route>
                 </Routes>
