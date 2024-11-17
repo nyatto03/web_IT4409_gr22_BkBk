@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 
-const UserPage = () => {
+const CustomerPage = () => {
   const { user, logout } = useAuth();
   const [bookings, setBookings] = useState([]);
 
@@ -46,4 +46,4 @@ const UserPage = () => {
   );
 };
 
-export default UserPage;
+export default CustomerPage;

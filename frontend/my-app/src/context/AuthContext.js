@@ -17,9 +17,21 @@ export const AuthProvider = ({ children }) => {
       const data = await authService.login(email, password);
       setUser(data.user);
       localStorage.setItem('token', data.token); // Lưu JWT vào localStorage
-      navigate('/user'); // Redirect user tới trang user (hoặc trang phù hợp)
+      localStorage.setItem('user', JSON.stringify(data.user)); // Lưu thông tin người dùng vào localStorage
+
+      // Kiểm tra và chuyển hướng dựa trên role của người dùng
+      if (data.user.role === 'admin') {
+        navigate('/admin');
+      } else if (data.user.role === 'assistant') {
+        navigate('/assistant');
+      } else if (data.user.role === 'customer') {
+        navigate('/customer');
+      } else {
+        navigate('/'); // Chuyển về trang mặc định nếu không phải admin, assistant, hay customer
+      }
     } catch (error) {
       console.error('Login failed:', error);
+      throw error;  // Quan trọng: ném lỗi để `LoginPage` có thể xử lý
     }
   };
 
@@ -28,15 +40,18 @@ export const AuthProvider = ({ children }) => {
       const data = await authService.register(name, email, password, phone, address);
       setUser(data.user);
       localStorage.setItem('token', data.token);
-      navigate('/user');
+      localStorage.setItem('user', JSON.stringify(data.user)); // Lưu thông tin người dùng vào localStorage
+      navigate('/login'); // Chuyển hướng đến trang login sau khi đăng ký thành công
     } catch (error) {
       console.error('Registration failed:', error);
+      throw error;
     }
   };
 
   const logout = () => {
     setUser(null);
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     navigate('/login');
   };
 
