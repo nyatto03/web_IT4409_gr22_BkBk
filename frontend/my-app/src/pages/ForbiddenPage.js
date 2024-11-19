@@ -4,7 +4,7 @@ import { Button, Typography, Space } from 'antd';
 
 const { Title, Paragraph } = Typography;
 
-const NotFoundPage = () => {
+const ForbiddenPage = () => {
   const [countdown, setCountdown] = useState(3); // Initialize countdown
   const navigate = useNavigate();
 
@@ -14,7 +14,7 @@ const NotFoundPage = () => {
       setCountdown(prevCountdown => {
         if (prevCountdown <= 1) {
           clearInterval(timer); // Clear interval when countdown reaches 0
-          navigate('/'); // Redirect to landing page when countdown is over
+          navigate('/login'); // Redirect to login page when countdown is over
         }
         return prevCountdown - 1;
       });
@@ -26,20 +26,20 @@ const NotFoundPage = () => {
 
   return (
     <div style={{ textAlign: 'center', padding: '20px' }}>
-      <Title level={2}>Page Not Found</Title>
-      <Paragraph>The page you are looking for does not exist.</Paragraph>
+      <Title level={2}>Forbidden Access</Title>
+      <Paragraph>You do not have permission to view this page.</Paragraph>
       <Paragraph>
-        You will be redirected to the landing page in {countdown} second{countdown !== 1 ? 's' : ''}...
+        You will be redirected to the login page in {countdown} second{countdown !== 1 ? 's' : ''}...
       </Paragraph>
-
-      {/* Button to redirect to landing page immediately */}
+      
+      {/* Button to redirect to login page immediately */}
       <Space>
-        <Button type="primary" onClick={() => navigate('/')} size="large">
-          Go to Landing Page
+        <Button type="primary" onClick={() => navigate('/login')} size="large">
+          Go to Login Page
         </Button>
       </Space>
     </div>
   );
 };
 
-export default NotFoundPage;
+export default ForbiddenPage;

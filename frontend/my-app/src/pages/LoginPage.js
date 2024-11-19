@@ -6,16 +6,16 @@ import { useNavigate } from 'react-router-dom';
 const { Title } = Typography;
 
 const LoginPage = () => {
-  const { login } = useAuth();  // Lấy hàm login từ context
-  const [email, setEmail] = useState('');  // State để lưu email
-  const [password, setPassword] = useState('');  // State để lưu mật khẩu
-  const [error, setError] = useState('');  // State để lưu lỗi
-  const navigate = useNavigate();  // Hook dùng để chuyển hướng
+  const { login } = useAuth(); // Lấy hàm login từ context
+  const [email, setEmail] = useState(''); // State để lưu email
+  const [password, setPassword] = useState(''); // State để lưu mật khẩu
+  const [error, setError] = useState(''); // State để lưu lỗi
+  const navigate = useNavigate(); // Hook dùng để chuyển hướng
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await login(email, password);  // Gọi hàm login từ context
+      await login(email, password); // Gọi hàm login từ context
       message.success('Login successful!');
     } catch (error) {
       if (error.response && error.response.data && error.response.data.error) {
@@ -41,8 +41,7 @@ const LoginPage = () => {
           required
           style={{ marginBottom: 16 }}
         />
-        <Input
-          type="password"
+        <Input.Password
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}

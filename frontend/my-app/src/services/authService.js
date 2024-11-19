@@ -1,28 +1,36 @@
-//service/authService.js
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/api/users'; // Địa chỉ API backend của bạn
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000/api/users'; // Ensure fallback to localhost if env variable is not set
 
 const login = async (email, password) => {
-  const response = await axios.post(`${API_URL}/login`, { email, password });
-  return response.data; // Trả về thông tin user và token
+  try {
+    const response = await axios.post(`${API_URL}/login`, { email, password });
+    return response.data; // Return user and token data
+  } catch (error) {
+    console.error('Login request failed:', error);
+    throw error;
+  }
 };
 
 const register = async (name, email, password, phone, address) => {
-  const response = await axios.post(`${API_URL}/register`, {
-    name,
-    email,
-    password,
-    phone,
-    address
-  });
-  return response.data; // Trả về thông tin user và token
+  try {
+    const response = await axios.post(`${API_URL}/register`, {
+      name,
+      email,
+      password,
+      phone,
+      address
+    });
+    return response.data; // Return user data on successful registration
+  } catch (error) {
+    console.error('Registration request failed:', error);
+    throw error;
+  }
 };
 
-// Gán đối tượng vào biến trước khi xuất khẩu
 const authService = {
   login,
-  register
+  register,
 };
 
 export default authService;

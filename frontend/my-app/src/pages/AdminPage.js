@@ -1,62 +1,58 @@
-import React, { useState, useEffect } from 'react';
+// src/pages/AdminPage.js
+import React, { useState } from 'react';
+import { Layout } from 'antd';
+import Header from '../components/Header';  // Cập nhật đường dẫn
+import Sidebar from '../components/Sidebar';  // Cập nhật đường dẫn
+import RoomTable from '../components/RoomTable';  // Cập nhật đường dẫn
+import UserTable from '../components/UserTable';  // Cập nhật đường dẫn
+import OrderTable from '../components/OrderTable';  // Cập nhật đường dẫn
+
+const { Content } = Layout;
 
 const AdminPage = () => {
-  const [rooms, setRooms] = useState([]);
-  const [bookings, setBookings] = useState([]);
+  // Đọc giá trị từ localStorage khi trang load
+  const savedSelectedKey = localStorage.getItem('selectedKey') || '1'; // Nếu không có thì mặc định là '1'
 
-  // Giả sử bạn có API để lấy danh sách phòng và đặt phòng
-  useEffect(() => {
-    const fetchRoomsAndBookings = async () => {
-      // Lấy danh sách phòng và booking từ API (giả sử)
-      setRooms([
-        { name: 'Phòng Deluxe', price: 1000000, available: true },
-        { name: 'Phòng Suite', price: 2000000, available: false }
-      ]);
-      setBookings([
-        { room: 'Phòng Deluxe', user: 'Nguyễn Văn A', status: 'Đã xác nhận' },
-        { room: 'Phòng Suite', user: 'Trần Thị B', status: 'Đang chờ' }
-      ]);
-    };
+  const [selectedKey, setSelectedKey] = useState(savedSelectedKey); // Sử dụng giá trị lưu trong localStorage
 
-    fetchRoomsAndBookings();
-  }, []);
+  // Cập nhật selectedKey và lưu vào localStorage mỗi khi người dùng chọn tab mới
+  const handleSelectMenu = (e) => {
+    const key = e.key;
+    setSelectedKey(key);
+    localStorage.setItem('selectedKey', key); // Lưu trạng thái vào localStorage
+  };
 
   return (
-    <div className="admin-page">
-      <header>
-        <h1>Trang Quản Trị Viên</h1>
-      </header>
-
-      <section className="rooms-management">
-        <h2>Quản lý phòng</h2>
-        <ul>
-          {rooms.map((room, index) => (
-            <li key={index}>
-              <h3>{room.name}</h3>
-              <p>Giá: {room.price} VND</p>
-              <p>{room.available ? 'Có sẵn' : 'Hết phòng'}</p>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section className="bookings-management">
-        <h2>Quản lý đặt phòng</h2>
-        <ul>
-          {bookings.map((booking, index) => (
-            <li key={index}>
-              <h3>{booking.room}</h3>
-              <p>Người đặt: {booking.user}</p>
-              <p>Trạng thái: {booking.status}</p>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <footer>
-        <p>&copy; 2024 Khách sạn ABC</p>
-      </footer>
-    </div>
+    <Layout style={{ minHeight: '100vh' }}>
+      <Sidebar selectedKey={selectedKey} onSelect={handleSelectMenu} />
+      <Layout style={{ marginLeft: 200 }}>
+        <Header />
+        <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
+          <div style={{ padding: 24, minHeight: 360 }}>
+            {selectedKey === '1' && (
+              <>
+                {/* Dashboard content */}
+              </>
+            )}
+            {selectedKey === '2' && (
+              <>
+                <UserTable />
+              </>
+            )}
+            {selectedKey === '3' && (
+              <>
+                <OrderTable />
+              </>
+            )}
+            {selectedKey === '4' && (
+              <>
+                <RoomTable />
+              </>
+            )}
+          </div>
+        </Content>
+      </Layout>
+    </Layout>
   );
 };
 

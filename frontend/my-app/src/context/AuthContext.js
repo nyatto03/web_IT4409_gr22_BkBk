@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
       } else if (data.user.role === 'customer') {
         navigate('/customer');
       } else {
-        navigate('/'); // Chuyển về trang mặc định nếu không phải admin, assistant, hay customer
+        navigate('/');
       }
     } catch (error) {
       console.error('Login failed:', error);
@@ -37,23 +37,21 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (name, email, password, phone, address) => {
     try {
-      const data = await authService.register(name, email, password, phone, address);
-      setUser(data.user);
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user)); // Lưu thông tin người dùng vào localStorage
-      navigate('/login'); // Chuyển hướng đến trang login sau khi đăng ký thành công
+      await authService.register(name, email, password, phone, address); // Không cần lưu kết quả vào data
+      navigate('/login');
     } catch (error) {
       console.error('Registration failed:', error);
       throw error;
     }
   };
 
-  const logout = () => {
+  const logout = (redirectPath = '/login') => {
     setUser(null);
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    navigate('/login');
+    navigate(redirectPath);
   };
+  
 
   return (
     <AuthContext.Provider value={{ user, login, register, logout }}>
