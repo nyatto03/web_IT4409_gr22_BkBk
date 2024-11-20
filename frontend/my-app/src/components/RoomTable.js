@@ -8,6 +8,7 @@ const RoomTable = () => {
     const [editingRoom, setEditingRoom] = useState(null);
     const [form] = Form.useForm();
     const [isTrashView, setIsTrashView] = useState(false); // New state to toggle trash view
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]); // Quản lý các hàng được chọn
 
     // Fetch rooms from API, with support for trash view
     const fetchRooms = async (showTrash = false) => {
@@ -58,12 +59,18 @@ const RoomTable = () => {
 
     const handleCancel = () => {
         const formValues = form.getFieldsValue();
-        const isModified = Object.keys(formValues).some((key) => formValues[key] !== editingRoom[key]);
+
+        // Kiểm tra thay đổi tùy theo chế độ (add/edit)
+        const isModified = editingRoom
+            ? Object.keys(formValues).some((key) => formValues[key] !== editingRoom[key]) // Chế độ edit
+            : Object.keys(formValues).some((key) => formValues[key] !== undefined); // Chế độ add
 
         if (isModified) {
             Modal.confirm({
-                title: 'You have unsaved changes',
-                content: 'Do you want to save your changes?',
+                title: editingRoom ? 'Unsaved Changes in Edit Mode' : 'Unsaved Changes in Add Mode',
+                content: editingRoom
+                    ? 'Do you want to save the changes to the room details?'
+                    : 'Do you want to save the new room details?',
                 okText: 'Save',
                 cancelText: 'Discard',
                 onOk: () => {
@@ -82,19 +89,41 @@ const RoomTable = () => {
         }
     };
 
-    const handleDeleteRoom = async (roomId, isTrash = true) => {
+    const handleDeleteRoom = async (roomIds, isTrash = true) => {
+        // Xử lý nếu chỉ xóa một phòng
+        // Ensure roomIds is always an array for consistency
+        if (!Array.isArray(roomIds)) {
+            roomIds = [roomIds]; // Wrap the single ID in an array if necessary
+        }
+
+        const title =
+            roomIds.length === 1
+                ? isTrash
+                    ? 'Are you sure you want to move this room to the trash?'
+                    : 'Are you sure you want to permanently delete this room?'
+                : isTrash
+                  ? 'Are you sure you want to move the selected rooms to the trash?'
+                  : 'Are you sure you want to permanently delete the selected rooms?';
+
+        const content =
+            roomIds.length === 1
+                ? isTrash
+                    ? 'This action can be undone.'
+                    : 'This action cannot be undone.'
+                : isTrash
+                  ? 'This action can be undone for all selected rooms.'
+                  : 'This action cannot be undone for all selected rooms.';
+
         Modal.confirm({
-            title: isTrash
-                ? 'Are you sure you want to move this room to the trash?'
-                : 'Are you sure you want to permanently delete this room?',
-            content: isTrash ? 'This action can be undone.' : 'This action cannot be undone.',
+            title: title,
+            content: content,
             okText: isTrash ? 'Move to Trash' : 'Delete',
             cancelText: 'Cancel',
             okButtonProps: {
                 style: {
-                    backgroundColor: isTrash ? '#ffc107' : '#f44336', // Yellow for move to trash, Red for delete
+                    backgroundColor: isTrash ? '#ffc107' : '#f44336', // Yellow for soft delete, Red for delete
                     borderColor: isTrash ? '#ffc107' : '#f44336',
-                    color: '#fff', // Text color white
+                    color: '#fff', // White text color
                 },
             },
             cancelButtonProps: {
@@ -104,20 +133,21 @@ const RoomTable = () => {
             },
             onOk: async () => {
                 try {
-                    if (isTrash) {
-                        // Xóa mềm phòng (chuyển phòng vào thùng rác)
-                        await apiClient.patch(`/rooms/${roomId}/soft-delete`);
-                        message.success('Room moved to trash');
-                    } else {
-                        // Xóa cứng phòng
-                        await apiClient.delete(`/rooms/${roomId}`);
-                        message.success('Room permanently deleted');
-                    }
+                    // Xử lý xóa phòng
+                    const promises = roomIds.map(async (roomId) => {
+                        if (isTrash) {
+                            return await apiClient.patch(`/rooms/${roomId}/soft-delete`);
+                        } else {
+                            return await apiClient.delete(`/rooms/${roomId}`);
+                        }
+                    });
 
-                    fetchRooms(isTrashView); // Lấy lại danh sách phòng sau khi xóa hoặc xóa mềm
+                    await Promise.all(promises); // Chờ đợi tất cả các yêu cầu xóa
+                    fetchRooms(isTrashView); // Refetch the rooms after action
+                    message.success(`${isTrash ? 'Moved to trash' : 'Permanently deleted'} successfully`);
                 } catch (error) {
-                    console.error(isTrash ? 'Error moving room to trash:' : 'Error permanently deleting room:', error);
-                    message.error(isTrash ? 'Error moving room to trash' : 'Error permanently deleting room');
+                    console.error('Error performing delete action:', error);
+                    message.error(`Error performing ${isTrash ? 'soft delete' : 'permanent delete'}`);
                 }
             },
         });
@@ -135,64 +165,67 @@ const RoomTable = () => {
     };
 
     const columns = [
-      { title: 'Room Name', dataIndex: 'name', key: 'name' },
-      { title: 'Description', dataIndex: 'description', key: 'description' },
-      { title: 'Price', dataIndex: 'price', key: 'price' },
-      { title: 'Status', dataIndex: 'status', key: 'status' },
-      {
-          title: 'Actions',
-          key: 'actions',
-          render: (_, room) => (
-              <div style={{ display: 'flex', justifyContent: 'space-evenly', width: '100%' }}>
-                  {isTrashView ? (
-                      <>
-                          <Button
-                              onClick={() => handleRestoreRoom(room._id)}
-                              type="default" // Outline button style
-                              style={{ color: 'green', borderColor: 'green' }} // Custom style for outline
-                          >
-                              Restore
-                          </Button>
-                          <Button
-                              onClick={() => handleDeleteRoom(room._id, false)}
-                              type="default" // Outline button style
-                              danger
-                              style={{ color: 'red', borderColor: 'red' }} // Red outline for hard delete
-                          >
-                              Permanently Delete
-                          </Button>
-                      </>
-                  ) : (
-                      <>
-                          <Button
-                              onClick={() => handleEditRoom(room)}
-                              type="default" // Outline button style
-                              style={{ color: 'blue', borderColor: 'blue' }} // Custom style for outline
-                          >
-                              Edit
-                          </Button>
-                          <Button
-                              onClick={() => handleDeleteRoom(room._id, true)}
-                              type="default" // Outline button style
-                              style={{ color: 'orange', borderColor: 'orange' }} // Custom style for soft delete
-                          >
-                              Move to Trash
-                          </Button>
-                          <Button
-                              onClick={() => handleDeleteRoom(room._id, false)}
-                              type="default" // Outline button style
-                              danger
-                              style={{ color: 'red', borderColor: 'red' }} // Red outline for hard delete
-                          >
-                              Delete
-                          </Button>
-                      </>
-                  )}
-              </div>
-          ),
-      },
-  ];
-  
+        {
+            title: 'Index',
+            key: 'index',
+            render: (_, __, index) => index + 1, // Số thứ tự của mỗi phòng
+        },
+        { title: 'Room Name', dataIndex: 'name', key: 'name' },
+        { title: 'Description', dataIndex: 'description', key: 'description' },
+        { title: 'Price', dataIndex: 'price', key: 'price' },
+        { title: 'Status', dataIndex: 'status', key: 'status' },
+        {
+            title: 'Actions',
+            key: 'actions',
+            render: (_, room) => (
+                <div style={{ display: 'flex', justifyContent: 'space-evenly', width: '100%' }}>
+                    {isTrashView ? (
+                        <>
+                            <Button
+                                onClick={() => handleRestoreRoom(room._id)}
+                                type="default"
+                                style={{ color: 'green', borderColor: 'green' }}
+                            >
+                                Restore
+                            </Button>
+                            <Button
+                                onClick={() => handleDeleteRoom(room._id, false)}
+                                type="default"
+                                danger
+                                style={{ color: 'red', borderColor: 'red' }}
+                            >
+                                Permanently Delete
+                            </Button>
+                        </>
+                    ) : (
+                        <>
+                            <Button
+                                onClick={() => handleEditRoom(room)}
+                                type="default"
+                                style={{ color: 'blue', borderColor: 'blue' }}
+                            >
+                                Edit
+                            </Button>
+                            <Button
+                                onClick={() => handleDeleteRoom(room._id, true)}
+                                type="default"
+                                style={{ color: 'orange', borderColor: 'orange' }}
+                            >
+                                Move to Trash
+                            </Button>
+                        </>
+                    )}
+                </div>
+            ),
+        },
+    ];
+
+    const rowSelection = {
+        selectedRowKeys,
+        onChange: (newSelectedRowKeys) => {
+            setSelectedRowKeys(newSelectedRowKeys); // Cập nhật các hàng được chọn
+        },
+    };
 
     const getAvailableStatusTransitions = (currentStatus) => {
         switch (currentStatus) {
@@ -208,64 +241,110 @@ const RoomTable = () => {
 
     return (
         <>
-            <Button type="primary" onClick={() => setIsTrashView(!isTrashView)} style={{ marginBottom: 16 }}>
-                {isTrashView ? 'View Active Rooms' : 'View Trash'}
+            <Button
+                type="primary"
+                onClick={() => {
+                    setIsModalVisible(true);
+                    setEditingRoom(null);
+                }}
+                style={{ marginBottom: 20 }}
+            >
+                Add Room
             </Button>
-            <Table dataSource={rooms} columns={columns} rowKey="_id" pagination={{ pageSize: 5 }} bordered />
+            <Button
+                type="default"
+                onClick={() => {
+                    setIsTrashView(!isTrashView);
+                }}
+                style={{ marginBottom: 20, marginLeft: 10 }}
+            >
+                {isTrashView ? 'View All Rooms' : 'View Trash'}
+            </Button>
+            {/* Only show "Move to Trash" button if at least one row is selected and not in Trash view */}
+            {!isTrashView && selectedRowKeys.length > 0 && (
+                <Button
+                    type="default"
+                    onClick={() => handleDeleteRoom(selectedRowKeys, true)} // Soft delete action
+                    style={{
+                        marginLeft: 10,
+                        backgroundColor: '#ffc107', // Yellow color for soft delete (Move to Trash)
+                        borderColor: '#ffc107', // Yellow border
+                        color: '#fff', // White text color
+                    }}
+                >
+                    Move Selected to Trash
+                </Button>
+            )}
 
+            {/* Only show "Delete Selected" button if at least one row is selected and in Trash view */}
+            {isTrashView && selectedRowKeys.length > 0 && (
+                <Button
+                    type="default"
+                    onClick={() => handleDeleteRoom(selectedRowKeys, false)} // Permanent delete action
+                    style={{
+                        marginLeft: 10,
+                        backgroundColor: '#f44336', // Red color for permanent delete (Delete Selected)
+                        borderColor: '#f44336', // Red border
+                        color: '#fff', // White text color
+                    }}
+                >
+                    Delete Selected
+                </Button>
+            )}
+
+            <Table
+                rowSelection={rowSelection}
+                columns={columns}
+                dataSource={rooms}
+                rowKey="_id"
+                pagination={{ pageSize: 10 }}
+            />
             <Modal
                 title={editingRoom ? 'Edit Room' : 'Add Room'}
                 visible={isModalVisible}
                 onCancel={handleCancel}
-                footer={[
-                    <Button key="cancel" onClick={handleCancel}>
-                        Cancel
-                    </Button>,
-                    <Button key="submit" type="primary" onClick={() => form.submit()}>
-                        {editingRoom ? 'Save Changes' : 'Add Room'}
-                    </Button>,
-                ]}
+                onOk={() => form.submit()}
+                okText={editingRoom ? 'Save Changes' : 'Add Room'}
             >
-                <Form form={form} initialValues={editingRoom || {}} onFinish={handleSaveRoom}>
+                <Form form={form} onFinish={handleSaveRoom} initialValues={editingRoom} layout="vertical">
                     <Form.Item
                         label="Room Name"
                         name="name"
-                        rules={[{ required: true, message: 'Please input the room name!' }]}
+                        rules={[{ required: true, message: 'Room name is required' }]}
                     >
                         <Input />
                     </Form.Item>
-
-                    <Form.Item
-                        label="Description"
-                        name="description"
-                        rules={[{ required: true, message: 'Please input the room description!' }]}
-                    >
+                    <Form.Item label="Description" name="description">
                         <Input />
                     </Form.Item>
-
-                    <Form.Item
-                        label="Price"
-                        name="price"
-                        rules={[{ required: true, message: 'Please input the room price!' }]}
-                    >
-                        <InputNumber min={0} />
+                    <Form.Item label="Price" name="price" rules={[{ required: true, message: 'Price is required' }]}>
+                        <InputNumber
+                            min={0}
+                            style={{ width: '100%' }}
+                            formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                        />
                     </Form.Item>
-
                     <Form.Item
                         label="Status"
                         name="status"
+                        initialValue={editingRoom ? editingRoom.status : 'available'}
                         rules={[{ required: true, message: 'Please select the room status!' }]}
                     >
                         <Select
-                            defaultValue={editingRoom ? editingRoom.status : 'available'}
+                            value={editingRoom ? editingRoom.status : undefined} // Dynamically set value based on editing mode
                             disabled={
                                 editingRoom && (editingRoom.status === 'confirmed' || editingRoom.status === 'booked')
                             }
                         >
-                            <Select.Option value={editingRoom ? editingRoom.status : 'available'}>
-                                {editingRoom ? editingRoom.status : 'available'}
-                            </Select.Option>
+                            {/* Default options for adding a room */}
+                            {!editingRoom && (
+                                <>
+                                    <Select.Option value="available">Available</Select.Option>
+                                    <Select.Option value="maintenance">Maintenance</Select.Option>
+                                </>
+                            )}
 
+                            {/* Dynamic status transitions for editing a room */}
                             {editingRoom &&
                                 getAvailableStatusTransitions(editingRoom.status).map((status) => (
                                     <Select.Option key={status} value={status}>
