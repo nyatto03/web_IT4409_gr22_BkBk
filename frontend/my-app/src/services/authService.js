@@ -1,10 +1,10 @@
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000/api/users'; // Ensure fallback to localhost if env variable is not set
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000/api/auth';
 
 const login = async (email, password) => {
   try {
-    const response = await axios.post(`${API_URL}/login`, { email, password });
+    const response = await axios.post(`${API_URL}/auth/login`, { email, password });
     return response.data; // Return user and token data
   } catch (error) {
     console.error('Login request failed:', error);
@@ -14,7 +14,7 @@ const login = async (email, password) => {
 
 const register = async (name, email, password, phone, address) => {
   try {
-    const response = await axios.post(`${API_URL}/register`, {
+    const response = await axios.post(`${API_URL}/auth/register`, {
       name,
       email,
       password,
