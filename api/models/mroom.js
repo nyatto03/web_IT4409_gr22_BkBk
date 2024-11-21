@@ -1,25 +1,45 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
 
-const roomschema = new mongoose.Schema({
-    title:{
-        type: String,
-        required: true
+const roomSchema = new mongoose.Schema(
+  {
+    _id: {
+      type: Schema.Types.ObjectId,
+      auto: true, 
     },
-    price:{
-        type: Number,
-        required: true
+    name: {
+      type: String,
+      required: true,
     },
-    maxPeople:{
-        type: Number,
-        required: true
+    description: {
+      type: String,
+      required: true,
     },
-    desc:{
-        type: String,
-        required: true
+    price: {
+      type: Number,
+      required: true,
     },
-    roomNumbers: [{number:Number, unavailableDates: [{type: Date}] }],
+    status: {
+      type: String,
+      enum: ["available", "booked", "maintenance"], // Chỉ nhận 3 giá trị
+      required: true,
+    },
+    created_at: {
+      type: Date,
+      default: Date.now, 
+      immutable: true, 
+    },
+    updated_at: {
+      type: Date,
+      default: Date.now,
+    },
+  },
+  {
+    timestamps: {
+      createdAt: "created_at", // Mapping timestamps vào created_at
+      updatedAt: "updated_at", // Mapping timestamps vào updated_at
+    },
+  }
+);
 
-}, {timestamps:true});
-
-export default mongoose.model("Room", roomschema)
+export default mongoose.model("Room", roomSchema);
