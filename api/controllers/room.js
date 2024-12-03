@@ -1,7 +1,7 @@
-import Room from "../models/Room.js";
-import Hotel from "../models/Hotel.js";
-import { createError } from "../utils/error.js";
+import Room from "../models/mroom.js";
+import { createError } from "../utils/err.js";
 
+// Thêm phòng mới
 export const createRoom = async (req, res, next) => {
   const hotelId = req.params.hotelid;
   const newRoom = new Room(req.body);
@@ -15,12 +15,16 @@ export const createRoom = async (req, res, next) => {
     } catch (err) {
       next(err);
     }
-    res.status(200).json(savedRoom);
+    res.status(201).json({
+      message: "Phòng mới đã được thêm thành công.",
+      room: savedRoom,
+    });
   } catch (err) {
     next(err);
   }
 };
 
+// Cập nhật thông tin phòng
 export const updateRoom = async (req, res, next) => {
   try {
     const updatedRoom = await Room.findByIdAndUpdate(
@@ -28,26 +32,16 @@ export const updateRoom = async (req, res, next) => {
       { $set: req.body },
       { new: true }
     );
-    res.status(200).json(updatedRoom);
+    res.status(200).json({
+      message: "Thông tin phòng đã được cập nhật.",
+      room: updatedRoom,
+    });
   } catch (err) {
     next(err);
   }
 };
-export const updateRoomAvailability = async (req, res, next) => {
-  try {
-    await Room.updateOne(
-      { "roomNumbers._id": req.params.id },
-      {
-        $push: {
-          "roomNumbers.$.unavailableDates": req.body.dates
-        },
-      }
-    );
-    res.status(200).json("Room status has been updated.");
-  } catch (err) {
-    next(err);
-  }
-};
+
+// Xóa phòng
 export const deleteRoom = async (req, res, next) => {
   const hotelId = req.params.hotelid;
   try {
@@ -59,22 +53,31 @@ export const deleteRoom = async (req, res, next) => {
     } catch (err) {
       next(err);
     }
-    res.status(200).json("Room has been deleted.");
+    res.status(200).json({
+      message: "Phòng đã được xóa khỏi hệ thống.",
+    });
   } catch (err) {
     next(err);
   }
 };
+
+// Xem chi tiết phòng
 export const getRoom = async (req, res, next) => {
   try {
     const room = await Room.findById(req.params.id);
+    if (!room) {
+      return next(createError(404, "Không tìm thấy phòng."));
+    }
     res.status(200).json(room);
   } catch (err) {
     next(err);
   }
 };
+
+// Xem danh sách các phòng
 export const getRooms = async (req, res, next) => {
   try {
-    const rooms = await Room.find();
+    const rooms = await Room.find().select("description price status");
     res.status(200).json(rooms);
   } catch (err) {
     next(err);
