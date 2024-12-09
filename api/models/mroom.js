@@ -24,6 +24,16 @@ const roomSchema = new mongoose.Schema(
       enum: ["available", "booked", "maintenance"], // Chỉ nhận 3 giá trị
       required: true,
     },
+    images: {
+      type: [String], // Mảng các URL hình ảnh
+      validate: {
+        validator: function (v) {
+          return v.every(url => /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|webp))$/i.test(url));
+        },
+        message: "Mỗi hình ảnh phải là URL hợp lệ",
+      },
+      default: [], // Mặc định là mảng rỗng nếu không có hình ảnh
+    },
     created_at: {
       type: Date,
       default: Date.now, 

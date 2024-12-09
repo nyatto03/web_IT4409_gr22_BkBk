@@ -61,11 +61,45 @@ export const deleteRoom = async (req, res, next) => {
   }
 };
 
+//Cập nhật hình ảnh của phòng
+export const updateRoomImages = async (req, res, next) => {
+  try {
+    const updatedRoom = await Room.findByIdAndUpdate(
+      req.params.id,
+      { $push: { images: { $each: req.body.images } } },
+      { new: true }
+    );
+    res.status(200).json({
+      message: "Hình ảnh phòng đã được cập nhật.",
+      room: updatedRoom,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+//Xóa ảnh phòng
+export const deleteRoomImage = async (req, res, next) => {
+  try {
+    const updatedRoom = await Room.findByIdAndUpdate(
+      req.params.id,
+      { $pull: { images: req.body.image } },
+      { new: true }
+    );
+    res.status(200).json({
+      message: "Hình ảnh đã được xóa khỏi phòng.",
+      room: updatedRoom,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 // Xem chi tiết phòng
 export const getRoom = async (req, res, next) => {
   try {
     const room = await Room.findById(req.params.id);
-    if (!room) {
+    if (!room) {  
       return next(createError(404, "Không tìm thấy phòng."));
     }
     res.status(200).json(room);
@@ -77,7 +111,7 @@ export const getRoom = async (req, res, next) => {
 // Xem danh sách các phòng
 export const getRooms = async (req, res, next) => {
   try {
-    const rooms = await Room.find().select("description price status");
+    const rooms = await Room.find().select("Mô tả trạng thái giá cả");
     res.status(200).json(rooms);
   } catch (err) {
     next(err);
