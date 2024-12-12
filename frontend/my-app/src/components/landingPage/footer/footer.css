@@ -1,0 +1,56 @@
+.footer{
+    background-color: #1e1e1e;
+}
+
+.footer-container{
+    color: #fff;
+    font-family: 'poppins';
+    margin: 0 15%;
+    display: flex;
+    justify-content: space-around;
+    padding: 50px 0;
+}
+
+.footer-item{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.footer-container .title {
+    display: block;
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.footer-container .content{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+.item{
+    display: flex;
+    gap: 10px;
+}
+
+.fa-icon{
+    color: #1877F2;
+    font-size: 20px;
+}
+
+.you-icon{
+    color: #FF0000;
+    font-size: 20px;
+}
+
+.ins-icon{
+    color:#E1306C;
+    font-size: 20px;
+}
+
+.map-icon{
+    color:#34A853;
+    font-size: 30px;
+}

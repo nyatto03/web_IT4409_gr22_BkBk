@@ -1,0 +1,72 @@
+.about-container{
+    display: flex;
+    flex-direction: column;
+    margin: 100px 15%;
+    font-family: 'poppins';
+}
+
+.title{
+    font-size: 50px;
+    font-weight: 550;
+}
+
+.about-wrapper{
+    display: flex;
+    gap: 100px;
+}
+
+.about-img{
+    flex:1;
+}
+
+.about-content{
+    flex:1;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    padding-top: 60px;
+}
+
+.content1{
+    font-size: 25px;
+    font-weight: 550;
+}
+
+.content2{
+    font-size: 40px;
+    color: #1e1e1e;
+    font-weight: 550;
+}
+
+.hightlight{
+    color: #9d7e54
+}
+
+.about-cards{
+    display: flex;
+    gap: 20px;
+}
+
+.about-card{
+    border: 1px solid #9d7e54;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    padding: 15px 45px;
+    background-color:rgb(245, 243, 241);
+}
+
+.content3{
+    font-weight: 550;
+    font-size: 40px;
+}
+
+.content4{
+    font-size: 20px;
+}
+
+.about-slogan{
+    font-size: 18px;
+}
