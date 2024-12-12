@@ -1,0 +1,58 @@
+.amen-container{
+    font-family: 'poppins';
+    margin: 100px 15%;
+}
+
+.title{
+    font-size: 50px;
+    font-weight: 550;
+}
+
+.swiper{
+    width: 100% !important;
+    height: 70% !important;
+}
+
+.amen-item{
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.amen-content{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.amen-content h2{
+    font-size: 66px;
+    margin-left: -100px;
+    -webkit-text-stroke: 1px #fff;
+}
+
+.amen-content button{
+    height: 40px;
+    cursor: pointer;
+    border-radius: 30px;
+    font-size: 20px;
+    background-color: #cb5c00;
+    border: none;
+    font-family: 'poppins';
+    letter-spacing: 1.2px;
+    color: white;
+}
+
+.amen-content button:hover{
+    color: #6a3d17;
+}
+
+
+.amen-item img{
+    width: 60%;
+    height: auto;
+    border-top-right-radius: 200px;
+    border-bottom-right-radius: 200px;
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+}
