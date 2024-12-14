@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import { createError } from "../utils/err.js";
+import { authMiddleware } from './authMiddleware.js';
 
 export const VerifyToken = (req, res, next) => {
     const token = req.cookies.access_token; // Check token in cookies
@@ -35,3 +36,14 @@ export const VerifyAdmin = (req, res, next) => {
         }
     });
 };
+
+export const VerifyAssistant = (req, res, next) => {
+    VerifyToken(req, res, (err) => {
+      if (err) return next(err); // Xử lý lỗi từ VerifyToken
+      if (req.user.role === "assistant" || req.user.isAdmin) {
+        next(); // Cho phép nếu là assistant hoặc admin
+      } else {
+        return next(createError(403, "You are not authorized!")); // Không có quyền
+      }
+    });
+  };

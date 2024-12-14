@@ -1,6 +1,49 @@
-import Order from "../models/morders.js";
-import User from "../models/muser.js";
-import Room from "../models/mroom.js";
+import Order from "../models/mOrders.js";
+import User from "../models/mUser.js";
+import Room from "../models/mRoom.js";
+
+// Tạo đơn đặt phòng mới
+export const createOrder = async (req, res, next) => {
+  const { userId, roomId, status, totalPrice } = req.body;
+
+  try {
+    // Kiểm tra xem userId có tồn tại hay không
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        message: "Người dùng không tồn tại.",
+      });
+    }
+
+    // Kiểm tra xem roomId có tồn tại hay không
+    const room = await Room.findById(roomId);
+    if (!room) {
+      return res.status(404).json({
+        message: "Phòng không tồn tại.",
+      });
+    }
+
+    // Tạo đơn đặt phòng mới
+    const newOrder = new Order({
+      userId,
+      roomId,
+      status: status || "pending", // Trạng thái mặc định là "pending"
+      totalPrice,
+      createdAt: new Date(), // Lưu ngày tạo
+    });
+
+    // Lưu đơn đặt phòng vào cơ sở dữ liệu
+    const savedOrder = await newOrder.save();
+
+    // Phản hồi thành công
+    res.status(201).json({
+      message: "Đơn đặt phòng đã được tạo thành công.",
+      order: savedOrder,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 // Hiển thị danh sách đơn đặt phòng
 export const getOrders = async (req, res, next) => {

@@ -1,28 +1,90 @@
-import User from "../models/muser.js";
+import User from "../models/mUser.js";
+import bcrypt from 'bcryptjs';
 
-// Cập nhật thông tin người dùng
-export const updateUser = async (req, res, next) => {
+// Tạo người dùng mới (chỉ dành cho Admin)
+export const createUser = async (req, res, next) => {
   try {
-    const updatedUser = await User.findByIdAndUpdate(
-      req.params.id,
-      { $set: req.body },
-      { new: true }
-    );
-    res.status(200).json({
-      message: "Thông tin người dùng đã được cập nhật.",
-      user: updatedUser,
+    // Kiểm tra nếu email đã tồn tại
+    const existingUser = await User.findOne({ email: req.body.email });
+    if (existingUser) {
+      return res.status(400).json({ message: "Email đã tồn tại." });
+    }
+
+    // Mã hóa mật khẩu
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(req.body.password, salt);
+
+    // Tạo người dùng mới
+    const newUser = new User({
+      ...req.body,
+      password: hashedPassword,
     });
-  } catch (error) {
-    next(error);
+
+    // Lưu người dùng
+    const savedUser = await newUser.save();
+    res.status(201).json({
+      message: "Người dùng mới đã được tạo thành công.",
+      user: savedUser,
+    });
+  } catch (err) {
+    next(err);
   }
 };
 
-// Xóa người dùng
-export const deleteUser = async (req, res, next) => {
+// Phân quyền cho người dùng (chỉ Admin)
+export const assignRole = async (req, res, next) => {
   try {
-    await User.findByIdAndDelete(req.params.id);
+    const { role } = req.body;
+
+    // Kiểm tra vai trò có hợp lệ hay không
+    const validRoles = ["admin", "assistant", "customer"]; // Bạn có thể tùy chỉnh danh sách này
+    if (!validRoles.includes(role)) {
+      return res.status(400).json({ message: "Vai trò không hợp lệ." });
+    }
+
+    // Cập nhật vai trò người dùng
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      { $set: { role } },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "Không tìm thấy người dùng." });
+    }
+
     res.status(200).json({
-      message: "Người dùng đã bị xóa khỏi hệ thống.",
+      message: "Vai trò người dùng đã được cập nhật.",
+      user: updatedUser,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const updateUser = async (req, res, next) => {
+  try {
+    const { newPassword, ...updateFields } = req.body;
+
+    let updatedData = { ...updateFields };
+
+    // Nếu người dùng gửi mật khẩu mới, mã hóa mật khẩu
+    if (newPassword) {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(newPassword, salt);
+      updatedData.password = hashedPassword;
+    }
+
+    // Cập nhật người dùng trong cơ sở dữ liệu
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      { $set: updatedData },
+      { new: true }
+    );
+
+    res.status(200).json({
+      message: "Thông tin người dùng đã được cập nhật.",
+      user: updatedUser,
     });
   } catch (error) {
     next(error);

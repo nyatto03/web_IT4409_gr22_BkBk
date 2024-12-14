@@ -5,32 +5,29 @@ import {
   getRoom,
   getRooms,
   updateRoom,
-  updateRoomImages,
-  deleteRoomImage,
+  searchRooms,
 } from "../controllers/room.js";
-import { VerifyAdmin } from "../utils/VerifyToken.js";
+import { VerifyAdmin, VerifyAssistant, VerifyUser } from "../utils/VerifyToken.js";
+import { authMiddleware } from "../utils/authMiddleware.js";
 
 const router = express.Router();
 //create
-router.post("/:hotelid", VerifyAdmin, createRoom);
+router.post("/", authMiddleware, VerifyAdmin, createRoom);
 
 //update
 //router.put("/availability/:id", updateRoomAvailability);
-router.put("/:id", VerifyAdmin, updateRoom);
+router.put("/:id", authMiddleware, VerifyAdmin, updateRoom);
+
+//Tìm kiếm phòng
+router.get('/rooms/search', authMiddleware, VerifyUser, searchRooms);
 
 //delete
-router.delete("/:id/:hotelid", VerifyAdmin, deleteRoom);
-
-// Cập nhật hình ảnh của phòng
-router.put("/:id/images", updateRoomImages);
-
-// Xóa một hình ảnh khỏi phòng
-router.delete("/:id/images", deleteRoomImage);
+router.delete("/:id", authMiddleware, VerifyAdmin, deleteRoom);
 
 //get
-router.get("/:id", getRoom);
+router.get("/:id", authMiddleware, getRoom);
 
 //getall
-router.get("/", getRooms);
+router.get("/", authMiddleware, getRooms);
 
 export default router;

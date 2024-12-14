@@ -11,6 +11,11 @@ const roomSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    room_type: {
+      type: [String], 
+      enum: ["Phòng đơn", "Phòng đôi"], 
+      required: true,
+    },
     description: {
       type: String,
       required: true,
@@ -21,7 +26,7 @@ const roomSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["available", "booked", "maintenance"], // Chỉ nhận 3 giá trị
+      enum: ["available", "Pending", "Confirmed", "booked", "maintenance"], // Chỉ nhận 5 giá trị
       required: true,
     },
     images: {
