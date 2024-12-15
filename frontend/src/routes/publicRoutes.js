@@ -13,13 +13,13 @@ const publicRoutes = [
         path: '/login',
         element: <LoginPage />,
         requiresAuth: false,
-        guestOnly: true, // Chỉ dành cho người dùng chưa đăng nhập
+        guestOnly: true,
     },
     {
         path: '/register',
         element: <RegisterPage />,
         requiresAuth: false,
-        guestOnly: true, // Chỉ dành cho người dùng chưa đăng nhập
+        guestOnly: true,
     },
     {
         path: '/allrooms',
