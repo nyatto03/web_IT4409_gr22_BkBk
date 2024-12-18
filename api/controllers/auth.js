@@ -24,7 +24,7 @@ export const login = async (req, res) => {
     }
 
     // Tạo token JWT sau khi xác thực thành công
-    const token = jwt.sign({ _id: user._id }, secretKey, { expiresIn: '12h' });
+    const token = jwt.sign({ _id: user._id }, secretKey, { expiresIn: '24h' });
 
     // Lấy thông tin người dùng để trả về (ẩn mật khẩu)
     const userResponse = {
@@ -66,7 +66,7 @@ export const register = async (req, res) => {
     await user.save();
 
     // Tạo token JWT cho người dùng mới
-    const token = jwt.sign({ _id: user._id }, secretKey, { expiresIn: '12h' });
+    const token = jwt.sign({ _id: user._id }, secretKey, { expiresIn: '24h' });
 
     // Trả về người dùng và token
     res.status(201).json({ user, token });

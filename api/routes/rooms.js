@@ -7,22 +7,22 @@ import {
   updateRoom,
   searchRooms,
 } from "../controllers/room.js";
-import { VerifyAdmin, VerifyAssistant, VerifyUser } from "../utils/VerifyToken.js";
 import { authMiddleware } from "../utils/authMiddleware.js";
+import { isAdmin, isCustomer } from "../utils/roleMiddleware.js";
 
 const router = express.Router();
 //create
-router.post("/", authMiddleware, VerifyAdmin, createRoom);
+router.post("/", authMiddleware, isAdmin, createRoom); 
 
 //update
 //router.put("/availability/:id", updateRoomAvailability);
-router.put("/:id", authMiddleware, VerifyAdmin, updateRoom);
+router.put("/:id", authMiddleware, isAdmin, updateRoom); 
 
 //Tìm kiếm phòng
-router.get('/rooms/search', authMiddleware, VerifyUser, searchRooms);
+router.get('/search', authMiddleware, isCustomer, searchRooms);
 
 //delete
-router.delete("/:id", authMiddleware, VerifyAdmin, deleteRoom);
+router.delete("/:id", authMiddleware, isAdmin, deleteRoom);
 
 //get
 router.get("/:id", authMiddleware, getRoom);

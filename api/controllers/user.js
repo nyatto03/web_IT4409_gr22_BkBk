@@ -94,17 +94,28 @@ export const updateUser = async (req, res, next) => {
 // Xem thông tin cá nhân người dùng và lịch sử đặt phòng
 export const getUser = async (req, res, next) => {
   try {
-    const user = await User.findById(req.params.id).select("-password"); // Không trả về mật khẩu
+    const user = await User.findById(req.params.id)
+      .select("-password") // Không trả về mật khẩu
+      .lean(); // Trả kết quả dưới dạng object thuần JS (tùy chọn)
+
     if (!user) {
       return res.status(404).json({ message: "Không tìm thấy người dùng." });
     }
 
-    const bookingHistory = await Booking.find({ userId: req.params.id })
-      .populate("roomId", "description price status") // Nếu cần thông tin chi tiết phòng
-      .populate("hotelId", "name location"); // Nếu cần thông tin khách sạn
+    // Lấy booking history trực tiếp từ user.booking_history
+    const bookingHistory = user.booking_history || [];
 
     res.status(200).json({
-      user,
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        address: user.address,
+        role: user.role,
+        created_at: user.created_at,
+        updated_at: user.updated_at,
+      },
       bookingHistory,
     });
   } catch (error) {

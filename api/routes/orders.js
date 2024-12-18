@@ -4,18 +4,18 @@ import {
   getOrders,
   updateOrderStatus,
 } from "../controllers/order.js"; 
-import { VerifyAdmin, VerifyAssistant, VerifyUser } from "../utils/VerifyToken.js";
+import { isAdmin, isAdminOrAssistant, isCustomer } from "../utils/roleMiddleware.js";
 import { authMiddleware } from "../utils/authMiddleware.js";
 
 const router = express.Router();
 
 //Tạo order (Chỉ customer)
-router.get("/", authMiddleware, VerifyUser, createOrder);
+router.post("/", authMiddleware, isCustomer, createOrder); 
 
 // Hiển thị danh sách đơn đặt phòng (Admin và Assistant)
-router.get("/", authMiddleware, VerifyAdmin, VerifyAssistant, getOrders);
+router.get("/", authMiddleware, isAdmin, isAdminOrAssistant, getOrders);
 
 // Cập nhật trạng thái đơn đặt phòng (Admin và Assistant)
-router.patch("/:id/status", authMiddleware, VerifyAdmin, VerifyAssistant, updateOrderStatus);
+router.patch("/:id/status", authMiddleware, isAdmin, isAdminOrAssistant, updateOrderStatus);
 
 export default router;

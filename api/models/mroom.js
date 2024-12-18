@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 
 const roomSchema = new mongoose.Schema(
   {
-    _id: {
+    user_id: {
       type: Schema.Types.ObjectId,
       auto: true, 
     },

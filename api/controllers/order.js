@@ -4,11 +4,11 @@ import Room from "../models/mRoom.js";
 
 // Tạo đơn đặt phòng mới
 export const createOrder = async (req, res, next) => {
-  const { userId, roomId, status, totalPrice } = req.body;
+  const { user_id, room_id, status, checkin_date, checkout_date } = req.body;
 
   try {
     // Kiểm tra xem userId có tồn tại hay không
-    const user = await User.findById(userId);
+    const user = await User.findById(user_id);
     if (!user) {
       return res.status(404).json({
         message: "Người dùng không tồn tại.",
@@ -16,26 +16,40 @@ export const createOrder = async (req, res, next) => {
     }
 
     // Kiểm tra xem roomId có tồn tại hay không
-    const room = await Room.findById(roomId);
+    const room = await Room.findById(room_id);
     if (!room) {
       return res.status(404).json({
         message: "Phòng không tồn tại.",
       });
     }
 
-    // Tạo đơn đặt phòng mới
+    // Calculate total price based on room price and the number of days
+    const checkinDate = new Date(checkin_date);
+    const checkoutDate = new Date(checkout_date);
+
+    if (checkoutDate <= checkinDate) {
+      return res.status(400).json({
+        message: "Ngày trả phòng phải sau ngày nhận phòng.",
+      });
+    }
+
+    const durationInDays = (checkoutDate - checkinDate) / (1000 * 3600 * 24); // Convert milliseconds to days
+    const totalPrice = room.price * durationInDays; // Calculate total price
+
+    // Create the new order
     const newOrder = new Order({
-      userId,
-      roomId,
-      status: status || "pending", // Trạng thái mặc định là "pending"
-      totalPrice,
-      createdAt: new Date(), // Lưu ngày tạo
+      user_id,
+      room_id,
+      status: status || "pending", // Default status
+      checkin_date: checkinDate,
+      checkout_date: checkoutDate,
+      total_price: totalPrice, // Calculated total price
     });
 
-    // Lưu đơn đặt phòng vào cơ sở dữ liệu
+    // Save the order to the database
     const savedOrder = await newOrder.save();
 
-    // Phản hồi thành công
+    // Respond with success
     res.status(201).json({
       message: "Đơn đặt phòng đã được tạo thành công.",
       order: savedOrder,
@@ -49,9 +63,9 @@ export const createOrder = async (req, res, next) => {
 export const getOrders = async (req, res, next) => {
   try {
     const orders = await Order.find()
-      .populate("userId", "name email") // Lấy thông tin người dùng
-      .populate("roomId", "description price status") // Lấy thông tin phòng
-      .select("userId roomId status totalPrice createdAt"); // Lọc các trường cần thiết
+      .populate("user_id", "name email") // Lấy thông tin người dùng
+      .populate("room_id", "description price status") // Lấy thông tin phòng
+      .select("user_id room_id status checkin_date checkout_date"); // Lọc các trường cần thiết
 
     res.status(200).json({
       message: "Danh sách đơn đặt phòng:",
@@ -78,8 +92,8 @@ export const updateOrderStatus = async (req, res, next) => {
       req.params.id,
       { $set: { status } },
       { new: true }
-    ).populate("userId", "name email") // Lấy thông tin người dùng
-      .populate("roomId", "description price status"); // Lấy thông tin phòng
+    ).populate("user_id", "name email") // Lấy thông tin người dùng
+      .populate("room_id", "description price status"); // Lấy thông tin phòng
 
     if (!updatedOrder) {
       return res.status(404).json({

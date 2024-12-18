@@ -8,15 +8,8 @@ export const createRoom = async (req, res, next) => {
 
   try {
     const savedRoom = await newRoom.save();
-    try {
-      await Hotel.findByIdAndUpdate(hotelId, {
-        $push: { rooms: savedRoom._id },
-      });
-    } catch (err) {
-      next(err);
-    }
     res.status(201).json({
-      message: "Phòng mới đã được thêm thành công.",
+      message: "Phòng đã được tạo thành công.",
       room: savedRoom,
     });
   } catch (err) {
