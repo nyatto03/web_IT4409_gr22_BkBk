@@ -173,6 +173,7 @@ const RoomTable = () => {
         { title: 'Room Name', dataIndex: 'name', key: 'name' },
         { title: 'Description', dataIndex: 'description', key: 'description' },
         { title: 'Price', dataIndex: 'price', key: 'price' },
+        {title: 'Images', dataIndex: 'images', key: 'images'},
         { title: 'Status', dataIndex: 'status', key: 'status' },
         {
             title: 'Actions',

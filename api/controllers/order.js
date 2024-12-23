@@ -1,6 +1,6 @@
-import Order from "../models/mOrders.js";
-import User from "../models/mUser.js";
-import Room from "../models/mRoom.js";
+import Order from "../models/orders.js";
+import User from "../models/user.js";
+import Room from "../models/room.js";
 
 // Tạo đơn đặt phòng mới
 export const createOrder = async (req, res, next) => {

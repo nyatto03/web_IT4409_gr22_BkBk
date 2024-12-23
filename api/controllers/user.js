@@ -1,4 +1,4 @@
-import User from "../models/mUser.js";
+import User from "../models/user.js";
 import bcrypt from 'bcryptjs';
 
 // Tạo người dùng mới (chỉ dành cho Admin)

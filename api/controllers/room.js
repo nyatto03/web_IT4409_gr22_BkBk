@@ -1,4 +1,4 @@
-import Room from "../models/mRoom.js";
+import Room from "../models/room.js";
 import { createError } from "../utils/err.js";
 
 // Thêm phòng mới
