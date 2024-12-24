@@ -9,7 +9,7 @@ const router = express.Router();
 router.post("/", authMiddleware, isAdmin, createUser); 
 
 // Phân quyền người dùng (Chỉ Admin)
-router.put("/:id/role", isAdmin, assignRole);
+router.put("/:id/role", authMiddleware, isAdmin, assignRole);
 
 //update
 router.put("/:id", authMiddleware, isCustomer, updateUser);

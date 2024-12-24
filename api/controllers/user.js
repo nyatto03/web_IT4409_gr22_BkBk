@@ -1,4 +1,5 @@
 import User from "../models/mUser.js";
+import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 
 // Tạo người dùng mới (chỉ dành cho Admin)
@@ -31,18 +32,32 @@ export const createUser = async (req, res, next) => {
   }
 };
 
-// Phân quyền cho người dùng (chỉ Admin)
 export const assignRole = async (req, res, next) => {
   try {
     const { role } = req.body;
 
-    // Kiểm tra vai trò có hợp lệ hay không
-    const validRoles = ["admin", "assistant", "customer"]; // Bạn có thể tùy chỉnh danh sách này
+    // Kiểm tra vai trò có tồn tại
+    if (!role) {
+      return res.status(400).json({ message: "Vai trò không được để trống." });
+    }
+
+    // Danh sách vai trò hợp lệ
+    const validRoles = ["admin", "assistant", "customer"];
     if (!validRoles.includes(role)) {
       return res.status(400).json({ message: "Vai trò không hợp lệ." });
     }
 
-    // Cập nhật vai trò người dùng
+    // Kiểm tra ID hợp lệ
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: "ID không hợp lệ." });
+    }
+
+    // Chỉ admin được phép cập nhật vai trò
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ message: "Bạn không có quyền thay đổi vai trò người dùng." });
+    }
+
+    // Cập nhật vai trò
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
       { $set: { role } },
@@ -58,7 +73,8 @@ export const assignRole = async (req, res, next) => {
       user: updatedUser,
     });
   } catch (err) {
-    next(err);
+    console.error(err);
+    res.status(500).json({ message: "Đã xảy ra lỗi.", error: err.message });
   }
 };
 

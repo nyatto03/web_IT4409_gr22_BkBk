@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 
 const roomSchema = new mongoose.Schema(
   {
-    user_id: {
+    room_id: {
       type: Schema.Types.ObjectId,
       auto: true, 
     },
@@ -26,7 +26,7 @@ const roomSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["available", "Pending", "Confirmed", "booked", "maintenance"], // Chỉ nhận 5 giá trị
+      enum: ["Available", "Pending", "Confirmed", "Booked", "Maintenance"], // Chỉ nhận 5 giá trị
       required: true,
     },
     images: {

@@ -72,6 +72,7 @@ export const updateRoom = async (req, res, next) => {
   }
 };
 
+// Tìm kiếm phòng
 export const searchRooms = async (req, res, next) => {
   const { room_type, status, min_price, max_price } = req.query;
 
@@ -142,7 +143,16 @@ export const getRoom = async (req, res, next) => {
 // Xem danh sách các phòng
 export const getRooms = async (req, res, next) => {
   try {
-    const rooms = await Room.find().select("Mô tả trạng thái giá cả");
+    // Lấy tên phòng từ query parameters
+    const { name } = req.query;
+
+    // Xây dựng bộ lọc
+    const filter = name ? { name: { $regex: name, $options: "i" } } : {};
+
+    // Tìm phòng với bộ lọc
+    const rooms = await Room.find(filter).select("name description status price");
+
+    // Trả về danh sách phòng
     res.status(200).json(rooms);
   } catch (err) {
     next(err);
