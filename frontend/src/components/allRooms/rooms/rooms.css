@@ -9,37 +9,126 @@
     max-width: 1800px;
     display: flex;
     gap: 20px;
+    position: relative;
 }
 
 .listSearch {
+    position: sticky;
+    top: 160px;
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    width: 300px;
+    height: fit-content;
     display: flex;
     flex-direction: column;
-    gap: 40px;
-    flex: 1;
-    background-color: #febb02;
-    padding: 10px;
-    border-radius: 10px;
-    position: sticky;
-    top: 100px;
-    height: max-content;
+}
+.lsItem {
+    margin-bottom: 24px;
+}
+.lsItem label {
+    display: block;
+    margin-bottom: 8px;
+    color: #595959;
+    font-weight: 500;
+}
+.filter-select {
+    width: 100%;
+}
+.ant-slider {
+    margin: 10px 0;
 }
 
+.ant-slider-tooltip {
+    min-width: 80px;
+}
+
+.ant-select-selector {
+    border-radius: 8px !important;
+}
 .listSearch>button{
     padding: 10px;
-    background-color: #0071c2;
+    background-color: #cb5c00;
     color: white;
     border: none;
     width: 100%;
     font-weight: 500;
     cursor: pointer;
+    border-radius: 10px;
+    transition: all 0.3s;
+    letter-spacing: 1.2px;
+}
+
+.listSearch>button:hover{
+    color: #d8d4d0;
 }
   
 .lsTitle{
     font-size: 20px;
-    color: #555;
-    margin-bottom: 10px;
+    color: #262626;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
+.lsTitle .anticon {
+    font-size: 18px;
+}
 .listResult {
     flex: 3;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    position: sticky;
+    top: 100px;
+}
+
+/* Add styles for pagination */
+.ant-pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 0 !important;
+}
+
+.searchBar {
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 500px;
+    top:100px;
+    position: sticky;
+}
+
+.searchBar .ant-input-affix-wrapper {
+    border-radius: 8px;
+    height: 40px;
+    font-size: 16px;
+}
+
+.searchBar .ant-input-affix-wrapper:hover,
+.searchBar .ant-input-affix-wrapper:focus {
+    border-color: #0071c2;
+    box-shadow: 0 0 0 2px rgba(0, 113, 194, 0.2);
+}
+
+.price-range-inputs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.price-input {
+    flex: 1;
+}
+
+.price-separator {
+    color: #8c8c8c;
+    font-weight: 500;
+}
+
+.ant-input-number {
+    width: 100%;
+    border-radius: 8px;
 }

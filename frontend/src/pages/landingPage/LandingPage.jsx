@@ -10,11 +10,22 @@ const LandingPage = () => {
     return (
         <div className="landing-page">
             <Navbar />
-            <Header />
-            <About />
-            <FamousRoom />
-            <Amen />
-            <Comment />
+            <section id="home">
+                <Header />
+            </section>
+            <section id="about">
+                <About />
+            </section>
+            <section id="famous-room">
+                <FamousRoom />
+            </section>
+            <section id="amenities">
+                <Amen />
+            </section>
+            <section id="comment">
+                <Comment />
+            </section>
+
             <Footer />
         </div>
     );

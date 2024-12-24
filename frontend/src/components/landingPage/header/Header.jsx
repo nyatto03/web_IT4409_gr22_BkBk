@@ -17,7 +17,7 @@ const Header = () => {
                 <SwiperSlide>
                     <div className="header-slide slide1">
                         <div className="header-content">
-                            <span className="content1">Khách sạn BKBK</span>
+                            <span className="content1">Khách sạn BKBK PREMIUM</span>
                             <span className="content2">Tận hưởng với phòng vip luxury</span>
                             <span className="content3">Gọi ngay</span>
                             <span className="content4">0987623455</span>

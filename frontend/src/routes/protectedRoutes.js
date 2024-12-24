@@ -1,6 +1,6 @@
 import AdminPage from '../pages/AdminPage';
 import AssistantPage from '../pages/AssistantPage';
-import CustomerPage from '../pages/CustomerPage';
+import CustomerPage from '../pages/customerPage/CustomerPage';
 import ForbiddenPage from '../pages/ForbiddenPage';
 
 const protectedRoutes = [
