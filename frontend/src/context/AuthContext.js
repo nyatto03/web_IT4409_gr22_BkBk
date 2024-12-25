@@ -16,10 +16,9 @@ export const AuthProvider = ({ children }) => {
         try {
             const data = await authService.login(email, password);
             setUser(data.user);
-            localStorage.setItem('token', data.token); // Lưu JWT vào localStorage
-            localStorage.setItem('user', JSON.stringify(data.user)); // Lưu thông tin người dùng vào localStorage
+            localStorage.setItem('token', data.token); 
+            localStorage.setItem('user', JSON.stringify(data.user)); 
 
-            // Kiểm tra và chuyển hướng dựa trên role của người dùng
             if (data.user.role === 'admin') {
                 navigate('/admin');
             } else if (data.user.role === 'assistant') {
@@ -31,14 +30,14 @@ export const AuthProvider = ({ children }) => {
             }
         } catch (error) {
             console.error('Login failed:', error);
-            throw error; // Quan trọng: ném lỗi để `LoginPage` có thể xử lý
+            throw error; 
         }
     };
 
     const register = async (name, email, password, phone, address) => {
         try {
             console.log('AuthContext register params:', { name, email, password, phone, address });
-            await authService.register(name, email, password, phone, address); // Không cần lưu kết quả vào data
+            await authService.register(name, email, password, phone, address);
             navigate('/login');
         } catch (error) {
             console.error('Registration failed:', error);

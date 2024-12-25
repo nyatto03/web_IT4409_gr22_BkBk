@@ -1,45 +1,40 @@
 import axios from 'axios';
 
-// Lấy giá trị từ biến môi trường
-// const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api'; // Fallback to localhost if the env variable is not set/
-const API_BASE_URL = 'http://localhost:8080/api'; // Fallback to localhost if the env variable is not set/
+// const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api';
+const API_BASE_URL = 'http://localhost:8080/api'; 
 
-console.log(API_BASE_URL, 'asdakds'); // Debugging, remove after confirmation
+console.log(API_BASE_URL, 'asdakds'); 
 
-// Tạo một instance axios mới
 const apiClient = axios.create({
-    baseURL: API_BASE_URL, // Cấu hình base URL cho tất cả các request
+    baseURL: API_BASE_URL,
     headers: {
-        'Content-Type': 'application/json', // Đảm bảo gửi dữ liệu dạng JSON
+        'Content-Type': 'application/json', 
     },
 });
 
-// Interceptor để thêm token vào header của mỗi request
 apiClient.interceptors.request.use(
     (config) => {
-        const token = localStorage.getItem('token'); // Lấy token từ localStorage
+        const token = localStorage.getItem('token');
         if (token) {
-            config.headers['Authorization'] = `Bearer ${token}`; // Thêm token vào header
+            config.headers['Authorization'] = `Bearer ${token}`; 
         }
-        return config; // Tiến hành request
+        return config;
     },
     (error) => {
-        return Promise.reject(error); // Nếu có lỗi trong quá trình request, trả lỗi
+        return Promise.reject(error); 
     },
 );
 
-// Interceptor xử lý lỗi 401 (Token hết hạn hoặc không hợp lệ)
 apiClient.interceptors.response.use(
-    (response) => response, // Nếu request thành công, trả về response
+    (response) => response, 
     (error) => {
         if (error.response?.status === 401) {
-            // Nếu token hết hạn (401), thực hiện logout và điều hướng đến trang login
             localStorage.removeItem('token');
             localStorage.removeItem('user');
             alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
-            window.location.href = '/login'; // Điều hướng đến trang login
+            window.location.href = '/login';
         }
-        return Promise.reject(error); // Nếu có lỗi khác, trả về lỗi
+        return Promise.reject(error);
     },
 );
 

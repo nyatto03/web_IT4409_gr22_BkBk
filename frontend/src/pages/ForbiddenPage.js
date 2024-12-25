@@ -5,22 +5,20 @@ import { Button, Typography, Space } from 'antd';
 const { Title, Paragraph } = Typography;
 
 const ForbiddenPage = () => {
-  const [countdown, setCountdown] = useState(3); // Initialize countdown
+  const [countdown, setCountdown] = useState(3); 
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Start countdown timer
     const timer = setInterval(() => {
       setCountdown(prevCountdown => {
         if (prevCountdown <= 1) {
-          clearInterval(timer); // Clear interval when countdown reaches 0
-          navigate('/login'); // Redirect to login page when countdown is over
+          clearInterval(timer);
+          navigate('/login');
         }
         return prevCountdown - 1;
       });
-    }, 1000); // Update every second
+    }, 1000); 
 
-    // Cleanup the interval when the component is unmounted
     return () => clearInterval(timer);
   }, [navigate]);
 

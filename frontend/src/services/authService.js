@@ -28,7 +28,7 @@ const register = async (name, email, password, phone, address) => {
             address,
         });
         console.log('🚀 ~ register ~ response:', response.data);
-        return response.data; // Return user data on successful registration
+        return response.data;
     } catch (error) {
         console.error('Registration request failed:', error);
         throw error;

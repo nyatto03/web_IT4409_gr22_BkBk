@@ -8,7 +8,6 @@ const { Content } = Layout;
 const AssistantPage = () => {
     return (
         <Layout style={{ minHeight: '100vh' }}>
-            {/* <Sidebar selectedKey={selectedKey} onSelect={handleSelectMenu} /> */}
             <Layout>
                 <Header />
 

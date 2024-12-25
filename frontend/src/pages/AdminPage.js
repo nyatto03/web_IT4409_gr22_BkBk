@@ -1,25 +1,22 @@
-// src/pages/AdminPage.js
 import React, { useState } from 'react';
 import { Layout } from 'antd';
-import Header from '../components/Header';  // Cập nhật đường dẫn
-import Sidebar from '../components/Sidebar';  // Cập nhật đường dẫn
-import RoomTable from '../components/RoomTable';  // Cập nhật đường dẫn
-import UserTable from '../components/UserTable';  // Cập nhật đường dẫn
-import OrderTable from '../components/OrderTable';  // Cập nhật đường dẫn
+import Header from '../components/Header'; 
+import Sidebar from '../components/Sidebar';  
+import RoomTable from '../components/RoomTable';  
+import UserTable from '../components/UserTable';  
+import OrderTable from '../components/OrderTable'; 
 
 const { Content } = Layout;
 
 const AdminPage = () => {
-  // Đọc giá trị từ localStorage khi trang load
-  const savedSelectedKey = localStorage.getItem('selectedKey') || '1'; // Nếu không có thì mặc định là '1'
+  const savedSelectedKey = localStorage.getItem('selectedKey') || '1'; 
 
-  const [selectedKey, setSelectedKey] = useState(savedSelectedKey); // Sử dụng giá trị lưu trong localStorage
+  const [selectedKey, setSelectedKey] = useState(savedSelectedKey);
 
-  // Cập nhật selectedKey và lưu vào localStorage mỗi khi người dùng chọn tab mới
   const handleSelectMenu = (e) => {
     const key = e.key;
     setSelectedKey(key);
-    localStorage.setItem('selectedKey', key); // Lưu trạng thái vào localStorage
+    localStorage.setItem('selectedKey', key); 
   };
 
   return (
