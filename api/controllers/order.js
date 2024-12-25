@@ -24,7 +24,7 @@ export const createOrder = async (req, res, next) => {
     }
 
     // Kiểm tra trạng thái phòng
-    if (room.status !== "available") {
+    if (room.status !== "Available") {
       return res.status(400).json({
         message: "Phòng hiện không khả dụng.",
       });

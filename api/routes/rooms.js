@@ -24,10 +24,10 @@ router.get('/search', authMiddleware, isCustomer, searchRooms);
 //delete
 router.delete("/:id", authMiddleware, isAdmin, deleteRoom);
 
-//get
-router.get("/:id", authMiddleware, getRoom);
-
 //getall
 router.get("/", authMiddleware, getRooms);
+
+//get
+router.get("/:id", authMiddleware, getRoom);
 
 export default router;

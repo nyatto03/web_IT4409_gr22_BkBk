@@ -13,7 +13,7 @@ const roomSchema = new mongoose.Schema(
     },
     room_type: {
       type: [String], 
-      enum: ["Phòng đơn", "Phòng đôi"], 
+      enum: ["Single", "Double"], 
       required: true,
     },
     description: {
@@ -31,12 +31,6 @@ const roomSchema = new mongoose.Schema(
     },
     images: {
       type: [String], // Mảng các URL hình ảnh
-      validate: {
-        validator: function (v) {
-          return v.every(url => /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|webp))$/i.test(url));
-        },
-        message: "Mỗi hình ảnh phải là URL hợp lệ",
-      },
       default: [], // Mặc định là mảng rỗng nếu không có hình ảnh
     },
     created_at: {

@@ -150,7 +150,7 @@ export const getRooms = async (req, res, next) => {
     const filter = name ? { name: { $regex: name, $options: "i" } } : {};
 
     // Tìm phòng với bộ lọc
-    const rooms = await Room.find(filter).select("name description status price");
+    const rooms = await Room.find(filter).select("name description status price room_type images");
 
     // Trả về danh sách phòng
     res.status(200).json(rooms);

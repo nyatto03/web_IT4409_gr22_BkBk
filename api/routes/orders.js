@@ -13,9 +13,9 @@ const router = express.Router();
 router.post("/", authMiddleware, isCustomer, createOrder); 
 
 // Hiển thị danh sách đơn đặt phòng (Admin và Assistant)
-router.get("/", authMiddleware, isAdmin, isAdminOrAssistant, getOrders);
+router.get("/", authMiddleware, getOrders);
 
 // Cập nhật trạng thái đơn đặt phòng (Admin và Assistant)
-router.patch("/:id/status", authMiddleware, isAdmin, isAdminOrAssistant, updateOrderStatus);
+router.patch("/:id/status", authMiddleware, updateOrderStatus);
 
 export default router;
