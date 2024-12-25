@@ -1,6 +1,8 @@
 import './famousRoom.css';
+import { useNavigate } from 'react-router-dom';
 
 const FamousRoom = () => {
+    const navigate = useNavigate();
     return (
         <div className="room">
             <div className="room-container">
@@ -24,7 +26,7 @@ const FamousRoom = () => {
                                     <p>-Đồ uống tại phòng</p>
                                 </div>
                                 <div className="booknow">
-                                    <button>Book Now</button>
+                                    <button onClick={() => navigate('/login')}>Đặt phòng ngay</button>
                                 </div>
                             </div>
                         </div>
@@ -32,7 +34,7 @@ const FamousRoom = () => {
                     <div className="card-container">
                         <div className="card">
                             <div className="card-front">
-                                <button>Phòng cao cấp</button>
+                                <button>Phòng giá rẻ</button>
                             </div>
                             <div className="card-back">
                                 <div className="room-price">
@@ -47,7 +49,7 @@ const FamousRoom = () => {
                                     <p>-Đồ uống tại phòng</p>
                                 </div>
                                 <div className="booknow">
-                                    <button>Book Now</button>
+                                    <button onClick={() => navigate('/login')}>Đặt phòng ngay</button>
                                 </div>
                             </div>
                         </div>
@@ -55,7 +57,7 @@ const FamousRoom = () => {
                     <div className="card-container">
                         <div className="card">
                             <div className="card-front">
-                                <button>Phòng cao cấp</button>
+                                <button>Phòng đơn</button>
                             </div>
                             <div className="card-back">
                                 <div className="room-price">
@@ -70,7 +72,7 @@ const FamousRoom = () => {
                                     <p>-Đồ uống tại phòng</p>
                                 </div>
                                 <div className="booknow">
-                                    <button>Book Now</button>
+                                    <button onClick={() => navigate('/login')}>Đặt phòng ngay</button>
                                 </div>
                             </div>
                         </div>
@@ -78,7 +80,7 @@ const FamousRoom = () => {
                     <div className="card-container">
                         <div className="card">
                             <div className="card-front">
-                                <button>Phòng cao cấp</button>
+                                <button>Phòng đôi</button>
                             </div>
                             <div className="card-back">
                                 <div className="room-price">
@@ -93,7 +95,7 @@ const FamousRoom = () => {
                                     <p>-Đồ uống tại phòng</p>
                                 </div>
                                 <div className="booknow">
-                                    <button>Book Now</button>
+                                    <button onClick={() => navigate('/login')}>Đặt phòng ngay</button>
                                 </div>
                             </div>
                         </div>
@@ -101,7 +103,7 @@ const FamousRoom = () => {
                     <div className="card-container">
                         <div className="card">
                             <div className="card-front">
-                                <button>Phòng cao cấp</button>
+                                <button>Phòng trống</button>
                             </div>
                             <div className="card-back">
                                 <div className="room-price">
@@ -116,7 +118,7 @@ const FamousRoom = () => {
                                     <p>-Đồ uống tại phòng</p>
                                 </div>
                                 <div className="booknow">
-                                    <button>Book Now</button>
+                                    <button onClick={() => navigate('/login')}>Đặt phòng ngay</button>
                                 </div>
                             </div>
                         </div>
@@ -124,7 +126,7 @@ const FamousRoom = () => {
                     <div className="card-container">
                         <div className="card">
                             <div className="card-front">
-                                <button>Phòng cao cấp</button>
+                                <button>Phòng vip</button>
                             </div>
                             <div className="card-back">
                                 <div className="room-price">
@@ -139,7 +141,7 @@ const FamousRoom = () => {
                                     <p>-Đồ uống tại phòng</p>
                                 </div>
                                 <div className="booknow">
-                                    <button>Book Now</button>
+                                    <button onClick={() => navigate('/login')}>Đặt phòng ngay</button>
                                 </div>
                             </div>
                         </div>

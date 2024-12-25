@@ -1,5 +1,9 @@
 import './navbar.css';
+import { useNavigate, useLocation } from 'react-router-dom';
+
 const Navbar = () => {
+    const navigate = useNavigate();
+    const location = useLocation();
     return (
         <div className="nav-container">
             <div className="nav">
@@ -9,22 +13,20 @@ const Navbar = () => {
                 <div className="nav-infor">
                     <ul>
                         <li>
-                            <a href="#">Home</a>
+                            <a
+                                className={location.pathname === '/customer' ? 'active' : ''}
+                                onClick={() => navigate('/customer')}
+                            >
+                                Tìm phòng
+                            </a>
                         </li>
                         <li>
-                            <a href="#">About us</a>
+                            <a href="#">Lịch sử đặt phòng</a>
                         </li>
                         <li>
-                            <a href="#">Category</a>
-                        </li>
-                        <li>
-                            <a href="#">Room</a>
+                            <a href="#">Thông tin cá nhân</a>
                         </li>
                     </ul>
-                </div>
-                <div className="nav-item">
-                    <button className="nav-btn">Login</button>
-                    <button className="nav-btn">Register</button>
                 </div>
             </div>
         </div>

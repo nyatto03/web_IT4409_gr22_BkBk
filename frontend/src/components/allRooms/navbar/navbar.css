@@ -39,9 +39,14 @@
   font-family: 'poppins';
   font-size: 21px;
   text-decoration: none;
+  cursor: pointer;
 }
 
 .nav-infor ul a:hover {
+  color: #cb5c00;
+}
+
+.nav-infor ul a.active {
   color: #cb5c00;
 }
 
