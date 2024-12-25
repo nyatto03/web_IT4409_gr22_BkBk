@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Modal, Form, Input, InputNumber, message } from 'antd';
+import { Table, Button, Modal, Form, Input, InputNumber, Select, message } from 'antd';
 import apiClient from '../utils/axiosConfig';
 
 const RoomTable = () => {
@@ -7,7 +7,6 @@ const RoomTable = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [editingRoom, setEditingRoom] = useState(null);
     const [form] = Form.useForm();
-    const [selectedRowKeys, setSelectedRowKeys] = useState([]); // Manage selected rows
 
     // Fetch rooms from API
     const fetchRooms = async () => {
@@ -25,17 +24,22 @@ const RoomTable = () => {
 
     useEffect(() => {
         if (editingRoom) {
-            form.setFieldsValue(editingRoom);
+            form.setFieldsValue(editingRoom); // Set the fields with the editing room values
         }
     }, [editingRoom, form]);
 
     const handleSaveRoom = async (values) => {
         try {
             if (editingRoom) {
-                await apiClient.patch(`/rooms/${editingRoom._id}`, values);
+                // Chỉ cho phép thay đổi status giữa "Sẵn sàng" và "Bảo trì"
+                const status =
+                    values.status === 'available' || values.status === 'maintenance' ? values.status : editingRoom.status;
+                const updatedValues = { ...values, status };
+
+                await apiClient.put(`/rooms/${editingRoom._id}`, updatedValues); // Update the room
                 message.success('Room updated successfully');
             } else {
-                await apiClient.post('/rooms', values);
+                await apiClient.post('/rooms', values); // Add a new room
                 message.success('Room added successfully');
             }
 
@@ -60,45 +64,6 @@ const RoomTable = () => {
         form.resetFields();
     };
 
-    const handleDeleteRoom = async (roomIds) => {
-        if (!Array.isArray(roomIds)) {
-            roomIds = [roomIds]; // Wrap single ID in an array if necessary
-        }
-
-        const title = roomIds.length === 1
-            ? 'Are you sure you want to delete this room?'
-            : 'Are you sure you want to delete the selected rooms?';
-
-        const content = roomIds.length === 1
-            ? 'This action cannot be undone.'
-            : 'This action cannot be undone for all selected rooms.';
-
-        Modal.confirm({
-            title,
-            content,
-            okText: 'Delete',
-            cancelText: 'Cancel',
-            okButtonProps: {
-                style: { backgroundColor: '#f44336', borderColor: '#f44336', color: '#fff' },
-            },
-            cancelButtonProps: { style: { color: '#757575' } },
-            onOk: async () => {
-                try {
-                    const promises = roomIds.map(async (roomId) => {
-                        return await apiClient.delete(`/rooms/${roomId}`);
-                    });
-
-                    await Promise.all(promises); // Wait for all delete requests to finish
-                    fetchRooms(); // Refetch the rooms after deletion
-                    message.success('Rooms deleted successfully');
-                } catch (error) {
-                    console.error('Error deleting rooms:', error);
-                    message.error('Error deleting rooms');
-                }
-            },
-        });
-    };
-
     const columns = [
         {
             title: 'Index',
@@ -108,7 +73,6 @@ const RoomTable = () => {
         { title: 'Room Name', dataIndex: 'name', key: 'name' },
         { title: 'Description', dataIndex: 'description', key: 'description' },
         { title: 'Price', dataIndex: 'price', key: 'price' },
-        { title: 'Images', dataIndex: 'images', key: 'images' },
         { title: 'Status', dataIndex: 'status', key: 'status' },
         {
             title: 'Actions',
@@ -122,25 +86,10 @@ const RoomTable = () => {
                     >
                         Edit
                     </Button>
-                    <Button
-                        onClick={() => handleDeleteRoom(room._id)}
-                        type="default"
-                        danger
-                        style={{ color: 'red', borderColor: 'red' }}
-                    >
-                        Delete
-                    </Button>
                 </div>
             ),
         },
     ];
-
-    const rowSelection = {
-        selectedRowKeys,
-        onChange: (newSelectedRowKeys) => {
-            setSelectedRowKeys(newSelectedRowKeys);
-        },
-    };
 
     return (
         <>
@@ -154,25 +103,11 @@ const RoomTable = () => {
             >
                 Add Room
             </Button>
-            {selectedRowKeys.length > 0 && (
-                <Button
-                    type="default"
-                    onClick={() => handleDeleteRoom(selectedRowKeys)}
-                    style={{
-                        marginLeft: 10,
-                        backgroundColor: '#f44336',
-                        borderColor: '#f44336',
-                        color: '#fff',
-                    }}
-                >
-                    Delete Selected
-                </Button>
-            )}
             <Table
-                rowSelection={rowSelection}
                 columns={columns}
                 dataSource={rooms}
                 rowKey="_id"
+                className="custom-table"
                 pagination={{ pageSize: 10 }}
             />
             <Modal
@@ -182,7 +117,12 @@ const RoomTable = () => {
                 onOk={() => form.submit()}
                 okText={editingRoom ? 'Save Changes' : 'Add Room'}
             >
-                <Form form={form} onFinish={handleSaveRoom} initialValues={editingRoom} layout="vertical">
+                <Form
+                    form={form} // Pass form instance here
+                    onFinish={handleSaveRoom}
+                    initialValues={editingRoom}
+                    layout="vertical"
+                >
                     <Form.Item
                         label="Room Name"
                         name="name"
@@ -193,12 +133,14 @@ const RoomTable = () => {
                     <Form.Item label="Description" name="description">
                         <Input />
                     </Form.Item>
-                    <Form.Item
-                        label="Price"
-                        name="price"
-                        rules={[{ required: true, message: 'Price is required' }]}
-                    >
+                    <Form.Item label="Price" name="price" rules={[{ required: true, message: 'Price is required' }]}>
                         <InputNumber min={0} style={{ width: '100%' }} />
+                    </Form.Item>
+                    <Form.Item label="Status" name="status" rules={[{ required: true, message: 'Status is required' }]}>
+                        <Select disabled={editingRoom && editingRoom.status !== 'available' && editingRoom.status !== 'maintenance'}>
+                            <Select.Option value="available">available</Select.Option>
+                            <Select.Option value="maintenance">maintenance</Select.Option>
+                        </Select>
                     </Form.Item>
                 </Form>
             </Modal>

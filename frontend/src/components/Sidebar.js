@@ -1,4 +1,3 @@
-// src/components/Sidebar.js
 import React from 'react';
 import { Layout, Menu } from 'antd';
 import { UserOutlined, AppstoreAddOutlined, FileDoneOutlined, ApartmentOutlined } from '@ant-design/icons';

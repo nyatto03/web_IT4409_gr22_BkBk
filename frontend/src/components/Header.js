@@ -9,8 +9,6 @@ const { Text } = Typography;
 const CustomHeader = () => {
   const { user, logout } = useAuth();  // Get user and logout from AuthContext
 
-  console.log(user)
-
   const navigate = useNavigate();  // Initialize navigate
 
   const handleLogout = () => {
