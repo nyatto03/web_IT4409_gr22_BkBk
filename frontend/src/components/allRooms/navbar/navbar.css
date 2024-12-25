@@ -25,6 +25,12 @@
   color: #cb5c00;
 }
 
+.nav-infor {
+  display: flex;
+  gap: 100px;
+  align-items: center;
+}
+
 .nav-infor ul {
   display: flex;
   list-style-type: none; 
@@ -55,9 +61,9 @@
   gap: 15px;
 }
 
-.nav-btn {
+.logout-btn {
   height: 40px;
-  width: 120px;
+  width: 150px;
   cursor: pointer;
   border-radius: 30px;
   font-size: 20px;

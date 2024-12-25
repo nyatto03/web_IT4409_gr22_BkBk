@@ -33,6 +33,42 @@
 .item{
     display: flex;
     gap: 10px;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.item:hover {
+    transform: translateY(-2px);
+}
+
+.item:hover span {
+    color: #cb5c00;
+}
+
+.fa-icon, .you-icon, .ins-icon, .map-icon {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.fa-icon:hover {
+    color: #1877F2;
+    transform: scale(1.2);
+}
+
+.you-icon:hover {
+    color: #FF0000;
+    transform: scale(1.2);
+}
+
+.ins-icon:hover {
+    color: #E1306C;
+    transform: scale(1.2);
+}
+
+.map-icon:hover {
+    color: #34A853;
+    transform: scale(1.2);
 }
 
 .fa-icon{
@@ -53,4 +89,25 @@
 .map-icon{
     color:#34A853;
     font-size: 30px;
+}
+
+.copyright .content {
+    text-align: center;
+    font-size: 14px;
+    color: #888;
+    transition: all 0.3s ease;
+}
+
+.copyright .content span {
+    display: block;
+    line-height: 1.5;
+}
+
+.copyright .content span:hover {
+    color: #fff;
+}
+
+.copyright .title {
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
