@@ -1,0 +1,101 @@
+.searchItem {
+  display: flex;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.siImgContainer {
+  width: 300px;
+  height: 250px;
+}
+
+.siSwiper {
+  height: 100% !important;
+}
+
+.siImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.siContent {
+  flex: 1;
+  display: flex;
+  padding: 20px;
+  gap: 20px;
+}
+
+.siDesc {
+  flex: 2;
+}
+
+.siTitle {
+  font-size: 24px;
+  color: #262626;
+  margin-bottom: 12px;
+}
+
+.siTags {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-direction: column;
+  width: 100px;
+}
+
+.siDescription {
+  color: #595959;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.siDetails {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.siPrice {
+  font-size: 24px;
+  font-weight: 600;
+  color: #262626;
+}
+
+.siTaxOp {
+  color: #8c8c8c;
+  font-size: 14px;
+}
+
+.siCheckButton {
+  width: 100%;
+  padding: 12px;
+  background: #cb5c00;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s;
+  letter-spacing: 1.2px;
+  border-radius: 10px;
+}
+
+.siCheckButton:hover:not(:disabled) {
+  color: #d8d4d0;
+}
+
+.siCheckButton:disabled {
+  background: #d9d9d9;
+  cursor: not-allowed;
+}
+
+.booking-form {
+  padding: 20px 0;
+}
+
+.ant-picker-range {
+  width: 100%;
+}

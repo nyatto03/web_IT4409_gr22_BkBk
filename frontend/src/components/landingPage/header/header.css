@@ -1,0 +1,65 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.header-container {
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+  font-family: 'poppins';
+}
+
+.swiper{
+  height: 100vh !important;
+  width: 100% !important;
+}
+
+.header-slide {
+  height:100vh;
+  width: 100%;
+  background-image: url('../../../../public/assets/box-hero-1.webp');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  image-rendering: auto;
+  position: relative;;
+}
+
+.slide2 {
+  background-image: url('../../../../public/assets/box-hero-2.webp');
+}
+
+.slide3 {
+  background-image: url('../../../../public/assets/box-hero-3.webp');
+}
+
+.header-content{
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  bottom: 18%;
+  left: 15%;
+  z-index: 2;
+  color: white;
+  gap: 18px;
+}
+
+.header-content .content1 {
+  font-size: 30px;
+}
+
+.header-content .content2{
+  font-size: 50px;
+  color: #fff;
+
+}
+
+.header-content .content3{
+  font-size: 30px;
+}
+
+.header-content .content4{
+  font-size: 30px;
+}
