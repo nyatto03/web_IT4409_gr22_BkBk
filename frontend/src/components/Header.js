@@ -1,19 +1,19 @@
 import React from 'react';
 import { Layout, Button, Typography, Avatar, Row, Col } from 'antd';
-import { useNavigate } from 'react-router-dom';  // Import useNavigate from React Router
-import { useAuth } from '../context/AuthContext';  // Import useAuth for managing user context
+import { useNavigate } from 'react-router-dom'; 
+import { useAuth } from '../context/AuthContext';  
 
 const { Header } = Layout;
 const { Text } = Typography;
 
 const CustomHeader = () => {
-  const { user, logout } = useAuth();  // Get user and logout from AuthContext
+  const { user, logout } = useAuth();
 
-  const navigate = useNavigate();  // Initialize navigate
+  const navigate = useNavigate();  
 
   const handleLogout = () => {
-    logout();  // Use the logout function from context to clear user info
-    navigate('/login');  // Redirect to login page after logout
+    logout();  
+    navigate('/login'); 
   };
 
   return (

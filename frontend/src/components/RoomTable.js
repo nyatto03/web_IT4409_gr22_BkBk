@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Modal, Form, Input, InputNumber, Select, message } from 'antd';
+import { Table, Button, Modal, Form, Input, InputNumber, Select, message, Row, Col } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 import apiClient from '../utils/axiosConfig';
 
 const RoomTable = () => {
     const [rooms, setRooms] = useState([]);
+    const [filteredRooms, setFilteredRooms] = useState([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [editingRoom, setEditingRoom] = useState(null);
+    const [searchKeyword, setSearchKeyword] = useState('');
+    const [statusFilter, setStatusFilter] = useState('');
     const [form] = Form.useForm();
 
     // Fetch rooms from API
@@ -13,6 +17,7 @@ const RoomTable = () => {
         try {
             const response = await apiClient.get('/rooms');
             setRooms(response.data);
+            setFilteredRooms(response.data);
         } catch (error) {
             console.error('Error fetching rooms:', error);
         }
@@ -24,26 +29,40 @@ const RoomTable = () => {
 
     useEffect(() => {
         if (editingRoom) {
-            form.setFieldsValue(editingRoom); // Set the fields with the editing room values
+            form.setFieldsValue(editingRoom);
         }
     }, [editingRoom, form]);
+
+    const handleSearch = () => {
+        const filteredData = rooms.filter(
+            (room) =>
+                (room.name.toLowerCase().includes(searchKeyword.toLowerCase()) ||
+                    (room.description && room.description.toLowerCase().includes(searchKeyword.toLowerCase()))) &&
+                (statusFilter ? room.status === statusFilter : true),
+        );
+        setFilteredRooms(filteredData);
+    };
 
     const handleSaveRoom = async (values) => {
         try {
             if (editingRoom) {
-                // Chỉ cho phép thay đổi status giữa "Sẵn sàng" và "Bảo trì"
                 const status =
-                    values.status === 'available' || values.status === 'maintenance' ? values.status : editingRoom.status;
+                    values.status === 'available' ||
+                    values.status === 'pending' ||
+                    values.status === 'confirmed' ||
+                    values.status === 'maintenance'
+                        ? values.status
+                        : editingRoom.status;
                 const updatedValues = { ...values, status };
 
-                await apiClient.put(`/rooms/${editingRoom._id}`, updatedValues); // Update the room
+                await apiClient.put(`/rooms/${editingRoom._id}`, updatedValues);
                 message.success('Room updated successfully');
             } else {
-                await apiClient.post('/rooms', values); // Add a new room
+                await apiClient.post('/rooms', values);
                 message.success('Room added successfully');
             }
 
-            fetchRooms(); // Refetch rooms after saving
+            fetchRooms();
             setIsModalVisible(false);
             setEditingRoom(null);
             form.resetFields();
@@ -72,7 +91,7 @@ const RoomTable = () => {
         },
         { title: 'Room Name', dataIndex: 'name', key: 'name' },
         { title: 'Description', dataIndex: 'description', key: 'description' },
-        { title: 'Price', dataIndex: 'price', key: 'price' },
+        { title: 'Price', dataIndex: 'price', key: 'price', render: (price) => `${price?.toLocaleString()} USD` },
         { title: 'Status', dataIndex: 'status', key: 'status' },
         {
             title: 'Actions',
@@ -93,19 +112,51 @@ const RoomTable = () => {
 
     return (
         <>
-            <Button
-                type="primary"
-                onClick={() => {
-                    setIsModalVisible(true);
-                    setEditingRoom(null);
-                }}
-                style={{ marginBottom: 20 }}
-            >
-                Add Room
-            </Button>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 20 }}>
+                <Row gutter={16}>
+                    <Col>
+                        <Input
+                            placeholder="Search by room name or description"
+                            value={searchKeyword}
+                            onChange={(e) => setSearchKeyword(e.target.value)} // Cập nhật giá trị từ khóa tìm kiếm
+                            style={{ width: 300 }}
+                        />
+                    </Col>
+                    <Col>
+                        <Select
+                            placeholder="Select status"
+                            value={statusFilter}
+                            onChange={(value) => setStatusFilter(value)}
+                            style={{ width: 200, marginLeft: 10 }}
+                        >
+                            <Select.Option value="">All</Select.Option>
+                            <Select.Option value="available">Available</Select.Option>
+                            <Select.Option value="pending">Pending</Select.Option>
+                            <Select.Option value="confirmed">Confirmed</Select.Option>
+                            <Select.Option value="maintenance">Maintenance</Select.Option>
+                        </Select>
+                    </Col>
+                    <Col>
+                        <Button type="default" icon={<SearchOutlined />} onClick={handleSearch}>
+                            Search
+                        </Button>
+                    </Col>
+                    <Col>
+                        <Button
+                            type="primary"
+                            onClick={() => {
+                                setIsModalVisible(true);
+                                setEditingRoom(null);
+                            }}
+                        >
+                            Add Room
+                        </Button>
+                    </Col>
+                </Row>
+            </div>
             <Table
                 columns={columns}
-                dataSource={rooms}
+                dataSource={filteredRooms} // Hiển thị dữ liệu đã lọc
                 rowKey="_id"
                 className="custom-table"
                 pagination={{ pageSize: 10 }}
@@ -117,12 +168,7 @@ const RoomTable = () => {
                 onOk={() => form.submit()}
                 okText={editingRoom ? 'Save Changes' : 'Add Room'}
             >
-                <Form
-                    form={form} // Pass form instance here
-                    onFinish={handleSaveRoom}
-                    initialValues={editingRoom}
-                    layout="vertical"
-                >
+                <Form form={form} onFinish={handleSaveRoom} initialValues={editingRoom} layout="vertical">
                     <Form.Item
                         label="Room Name"
                         name="name"
@@ -137,8 +183,16 @@ const RoomTable = () => {
                         <InputNumber min={0} style={{ width: '100%' }} />
                     </Form.Item>
                     <Form.Item label="Status" name="status" rules={[{ required: true, message: 'Status is required' }]}>
-                        <Select disabled={editingRoom && editingRoom.status !== 'available' && editingRoom.status !== 'maintenance'}>
+                        <Select
+                            disabled={
+                                editingRoom &&
+                                editingRoom.status !== 'available' &&
+                                editingRoom.status !== 'maintenance'
+                            }
+                        >
                             <Select.Option value="available">available</Select.Option>
+                            <Select.Option value="pending">pending</Select.Option>
+                            <Select.Option value="confirmed">confirmed</Select.Option>
                             <Select.Option value="maintenance">maintenance</Select.Option>
                         </Select>
                     </Form.Item>

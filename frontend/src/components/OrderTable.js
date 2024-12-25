@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Select, message } from 'antd';
+import { Table, Select, Input, Button, message, Row, Col } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 import apiClient from '../utils/axiosConfig';
 
 // Utility function to format dates
 const formatDate = (date) => {
-    if (!date) return 'N/A'; // Trả về N/A nếu không có ngày
+    if (!date) return 'N/A';
     return new Date(date).toLocaleString();
 };
 
@@ -12,13 +13,16 @@ const formatDate = (date) => {
 const calculateTotalPrice = (price, checkinDate, checkoutDate) => {
     const checkin = new Date(checkinDate);
     const checkout = new Date(checkoutDate);
-    const days = (checkout - checkin) / (1000 * 60 * 60 * 24); // Số ngày
+    const days = (checkout - checkin) / (1000 * 60 * 60 * 24); 
     return price * days;
 };
 
 const OrderTable = () => {
     const [orders, setOrders] = useState([]);
+    const [filteredOrders, setFilteredOrders] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [searchKeyword, setSearchKeyword] = useState('');
+    const [statusFilter, setStatusFilter] = useState('');
 
     // Fetch orders from API
     const fetchOrders = async () => {
@@ -31,6 +35,7 @@ const OrderTable = () => {
                 }))
                 .reverse();
             setOrders(updatedOrders);
+            setFilteredOrders(updatedOrders);
         } catch (error) {
             console.error('Error fetching orders:', error);
         }
@@ -40,10 +45,20 @@ const OrderTable = () => {
         fetchOrders();
     }, []);
 
+    const handleSearch = () => {
+        const filteredData = orders.filter(
+            (order) =>
+                (order.user_id?.name.toLowerCase().includes(searchKeyword.toLowerCase()) ||
+                order.room_id?.name.toLowerCase().includes(searchKeyword.toLowerCase()) ||
+                order.room_id?.description?.toLowerCase().includes(searchKeyword.toLowerCase())) &&
+                (statusFilter ? order.status === statusFilter : true)
+        );
+        setFilteredOrders(filteredData);
+    };
+
     const handleUpdateStatus = async (orderId, newStatus, currentStatus) => {
         setLoading(true);
         try {
-            // Kiểm tra nếu trạng thái hiện tại là pending hoặc approved, chỉ cho phép chuyển sang các trạng thái hợp lệ
             if (currentStatus === 'pending') {
                 if (newStatus !== 'approved' && newStatus !== 'canceled') {
                     return message.error('Chỉ có thể chuyển từ pending sang approved hoặc canceled.');
@@ -54,11 +69,9 @@ const OrderTable = () => {
                 }
             }
 
-            // Cập nhật trạng thái đơn đặt phòng
             const response = await apiClient.put(`/orders/${orderId}`, { status: newStatus });
-            message.success(response.data.message); // Hiển thị thông báo thành công
+            message.success(response.data.message);
 
-            // Cập nhật lại danh sách đơn sau khi cập nhật trạng thái
             setOrders((prevOrders) =>
                 prevOrders.map((order) => (order._id === orderId ? { ...order, status: newStatus } : order)),
             );
@@ -132,19 +145,56 @@ const OrderTable = () => {
             title: 'Total Price',
             dataIndex: 'total_price',
             key: 'total_price',
-            render: (price) => `${price?.toLocaleString()} VND`, // Hiển thị giá theo định dạng tiền tệ
+            render: (price) => `${price?.toLocaleString()} USD`,
         },
     ];
 
     return (
-        <Table
-            className="custom-table"
-            dataSource={orders}
-            columns={columns}
-            rowKey="_id"
-            pagination={{ pageSize: 10 }}
-            bordered
-        />
+        <div>
+            <div style={{ marginBottom: 20, display: 'flex', justifyContent: 'space-between' }}>
+                <Row gutter={16}>
+                    <Col>
+                        <Input
+                            placeholder="Search by user name or room name"
+                            value={searchKeyword}
+                            onChange={(e) => setSearchKeyword(e.target.value)} // Cập nhật từ khóa tìm kiếm
+                            style={{ width: 300 }}
+                        />
+                    </Col>
+                    <Col>
+                        <Select
+                            placeholder="Filter by status"
+                            value={statusFilter}
+                            onChange={(value) => setStatusFilter(value)} 
+                            style={{ width: 200, marginLeft: 10 }}
+                        >
+                            <Select.Option value="">All</Select.Option>
+                            <Select.Option value="pending">Pending</Select.Option>
+                            <Select.Option value="approved">Approved</Select.Option>
+                            <Select.Option value="paid">Paid</Select.Option>
+                            <Select.Option value="canceled">Canceled</Select.Option>
+                        </Select>
+                    </Col>
+                    <Col>
+                        <Button
+                            type="default"
+                            icon={<SearchOutlined />}
+                            onClick={handleSearch} 
+                        >
+                            Search
+                        </Button>
+                    </Col>
+                </Row>
+            </div>
+            <Table
+                className="custom-table"
+                dataSource={filteredOrders}
+                columns={columns}
+                rowKey="_id"
+                pagination={{ pageSize: 10 }}
+                bordered
+            />
+        </div>
     );
 };
 
