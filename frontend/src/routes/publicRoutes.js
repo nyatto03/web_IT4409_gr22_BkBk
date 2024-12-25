@@ -1,7 +1,6 @@
 import LandingPage from '../pages/landingPage/LandingPage';
 import LoginPage from '../pages/LoginPage';
 import RegisterPage from '../pages/RegisterPage';
-// import CustomerPage from '../pages/CustomerPage/CustomerPage';
 
 const publicRoutes = [
     {
@@ -21,11 +20,6 @@ const publicRoutes = [
         requiresAuth: false,
         guestOnly: true,
     },
-    // {
-    //     path: '/allrooms',
-    //     element: <CustomerPage />,
-    //     requiresAuth: false,
-    // },
 ];
 
 export default publicRoutes;

@@ -38,7 +38,7 @@ const FamousRoom = () => {
                             </div>
                             <div className="card-back">
                                 <div className="room-price">
-                                    <p>2.000.000đ/Ngày</p>
+                                    <p>1.000.000đ/Ngày</p>
                                 </div>
                                 <div className="card-content">
                                     <h3>Phòng cao cấp</h3>
@@ -61,7 +61,7 @@ const FamousRoom = () => {
                             </div>
                             <div className="card-back">
                                 <div className="room-price">
-                                    <p>2.000.000đ/Ngày</p>
+                                    <p>1.500.000đ/Ngày</p>
                                 </div>
                                 <div className="card-content">
                                     <h3>Phòng cao cấp</h3>
@@ -84,7 +84,7 @@ const FamousRoom = () => {
                             </div>
                             <div className="card-back">
                                 <div className="room-price">
-                                    <p>2.000.000đ/Ngày</p>
+                                    <p>2.500.000đ/Ngày</p>
                                 </div>
                                 <div className="card-content">
                                     <h3>Phòng cao cấp</h3>
@@ -130,7 +130,7 @@ const FamousRoom = () => {
                             </div>
                             <div className="card-back">
                                 <div className="room-price">
-                                    <p>2.000.000đ/Ngày</p>
+                                    <p>3.000.000đ/Ngày</p>
                                 </div>
                                 <div className="card-content">
                                     <h3>Phòng cao cấp</h3>

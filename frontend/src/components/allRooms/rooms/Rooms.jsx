@@ -37,7 +37,7 @@ const Rooms = () => {
             }
         };
         fetchData();
-    }, [rooms]);
+    }, []);
 
     // Filter rooms based on search term
     // const filteredRooms = rooms.filter((room) => room.name.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -47,7 +47,9 @@ const Rooms = () => {
             filters.roomType.length === 0 || filters.roomType.some((type) => room.room_type.includes(type));
         const matchesStatus =
             !filters.status ||
-            (filters.status === 'Available' ? room.status === 'Available' : room.status !== 'Available');
+            (filters.status.toLowerCase() === 'available'
+                ? room.status.toLowerCase() === 'available'
+                : room.status.toLowerCase() !== 'available');
         const matchesPrice = room.price >= filters.priceRange[0] && room.price <= filters.priceRange[1];
         return matchesSearch && matchesType && matchesStatus && matchesPrice;
     });
