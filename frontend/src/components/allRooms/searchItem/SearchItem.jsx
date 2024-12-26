@@ -81,6 +81,10 @@ const SearchItem = ({ room }) => {
         setIsModalVisible(false);
     };
 
+    //hello
+    const fixedImages = ['101-2.jpg', '101-5.jpg', '102-4.jpg', '102-5.jpg', '103-1.jpg', '103-4.jpg'];
+    const displayImages = room.images && room.images.length > 0 ? room.images : fixedImages;
+
     return (
         <div className="searchItem" onClick={handleRoomClick}>
             <div className="siImgContainer">
@@ -93,7 +97,7 @@ const SearchItem = ({ room }) => {
                     modules={[Navigation, Pagination]}
                     className="siSwiper"
                 >
-                    {room.images.map((image, index) => (
+                    {displayImages.map((image, index) => (
                         <SwiperSlide key={index}>
                             <img src={`/assets/${image}`} alt={`${room.name} - Ảnh ${index + 1}`} className="siImg" />
                         </SwiperSlide>
