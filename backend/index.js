@@ -11,21 +11,28 @@ const app = express();
 dotenv.config();
 
 const connect = async () => {
-  try {
-    await mongoose.connect(process.env.MONGO);
-    console.log("Connected to mongoDB.");
-  } catch (error) {
-    throw error;
-  }
+    try {
+        await mongoose.connect(process.env.MONGO);
+        console.log("Connected to mongoDB.");
+    } catch (error) {
+        throw error;
+    }
 };
 
 mongoose.connection.on("disconnected", () => {
-  console.log("mongoDB disconnected!");
+    console.log("mongoDB disconnected!");
 });
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
+
+app.use(
+    cors({
+        origin: "*",
+        methods: ["GET", "POST", "PUT", "DELETE"],
+    })
+);
+
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/auth", authRoute);
@@ -34,6 +41,6 @@ app.use("/api/orders", ordersRoute);
 app.use("/api/rooms", roomsRoute);
 
 app.listen(8080, () => {
-  connect();
-  console.log("Server is connected");
+    connect();
+    console.log("Server is connected");
 });

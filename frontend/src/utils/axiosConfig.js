@@ -1,9 +1,7 @@
 import axios from 'axios';
 
-// const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api';
-const API_BASE_URL = 'http://localhost:8080/api';
-
-console.log(API_BASE_URL, 'asdakds');
+// const API_BASE_URL = 'http://localhost:8080/api';
+const API_BASE_URL = 'https://web-it4409-gr22-bkbk.onrender.com/api';
 
 const apiClient = axios.create({
     baseURL: API_BASE_URL,

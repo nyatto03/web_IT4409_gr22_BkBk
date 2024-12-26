@@ -1,12 +1,8 @@
-import axios from 'axios';
-
-// const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api/auth';
-const API_URL = 'http://localhost:8080/api';
-console.log('API_URL:', API_URL);
+import apiClient from "../utils/axiosConfig";
 
 const login = async (email, password) => {
     try {
-        const response = await axios.post(`${API_URL}/auth/login`, { email, password });
+        const response = await apiClient.post('/auth/login', { email, password });
         return response.data; // Return user and token data
     } catch (error) {
         console.error('Login request failed:', error);
@@ -17,10 +13,10 @@ const login = async (email, password) => {
 const register = async (name, email, password, phone, address) => {
     try {
         console.log('AuthService register request:', {
-            url: `${API_URL}/auth/register`,
+            url: '/auth/register',
             data: { name, email, phone, address },
         });
-        const response = await axios.post(`${API_URL}/auth/register`, {
+        const response = await apiClient.post('/auth/register', {
             name,
             email,
             password,
