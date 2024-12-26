@@ -113,6 +113,9 @@ const Room = () => {
         window.open('https://maps.google.com/?q=Ng. 9 D. Nguyên Hồng', '_blank');
     };
 
+    const fixedImages = ['101-2.jpg', '101-5.jpg', '102-4.jpg', '102-5.jpg', '103-1.jpg', '103-4.jpg'];
+    const displayImages = room?.images?.length > 0 ? room.images : fixedImages;
+
     return (
         <div>
             <div className="hotelContainer">
@@ -121,7 +124,7 @@ const Room = () => {
                         <FontAwesomeIcon icon={faCircleXmark} className="close" onClick={() => setOpen(false)} />
                         <FontAwesomeIcon icon={faCircleArrowLeft} className="arrow" onClick={() => handleMove('l')} />
                         <div className="sliderWrapper">
-                            <img src={`/assets/${room?.images[slideNumber]}`} alt="" className="sliderImg" />
+                            <img src={`/assets/${displayImages[slideNumber]}`} alt="" className="sliderImg" />
                         </div>
                         <FontAwesomeIcon icon={faCircleArrowRight} className="arrow" onClick={() => handleMove('r')} />
                     </div>
@@ -165,7 +168,7 @@ const Room = () => {
                     </div>
 
                     <div className="hotelImages">
-                        {room?.images.map((image, i) => (
+                        {displayImages.map((image, i) => (
                             <div className="hotelImgWrapper" key={i}>
                                 <img
                                     onClick={() => handleOpen(i)}
