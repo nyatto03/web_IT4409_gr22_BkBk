@@ -19,11 +19,11 @@ const About = () => {
                     </p>
                     <div className="about-cards">
                         <div className="about-card">
-                            <p className="content3">500+ </p>
+                            <p className="content3">50+ </p>
                             <span className="content4">khách</span>
                         </div>
                         <div className="about-card the-second-card">
-                            <p className="content3">200+</p>
+                            <p className="content3">10+</p>
                             <span className="content4">phòng</span>
                         </div>
                         <div className="about-card">

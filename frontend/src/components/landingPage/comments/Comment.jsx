@@ -32,7 +32,7 @@ const Comment = () => {
                         <div className="comment">
                             <img src={img1} alt="" />
                             <div className="comment-content">
-                                <h3>Anh Nguyễn Hoàng Đạo</h3>
+                                <h3>Anh Hoàng Đạo</h3>
                                 <span>Khách hàng của khách sạn</span>
                                 <p>
                                     Khách sạn thực sự mang lại trải nghiệm đẳng cấp. Phòng nghỉ rộng rãi, sạch sẽ, và
@@ -46,7 +46,7 @@ const Comment = () => {
                         <div className="comment">
                             <img src={img2} alt="" />
                             <div className="comment-content">
-                                <h3>Anh Nguyễn Phúc Lịnh</h3>
+                                <h3>Anh Phúc Lịnh</h3>
                                 <span>Khách hàng của khách sạn</span>
                                 <p>
                                     Khách sạn thực sự mang lại trải nghiệm đẳng cấp. Phòng nghỉ rộng rãi, sạch sẽ, và
@@ -60,7 +60,7 @@ const Comment = () => {
                         <div className="comment">
                             <img src={img3} alt="" />
                             <div className="comment-content">
-                                <h3>Anh Nguyễn Nguyên Phan</h3>
+                                <h3>Chị Thu Hà</h3>
                                 <span>Khách hàng của khách sạn</span>
                                 <p>
                                     Khách sạn thực sự mang lại trải nghiệm đẳng cấp. Phòng nghỉ rộng rãi, sạch sẽ, và

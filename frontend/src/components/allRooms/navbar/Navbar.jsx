@@ -4,11 +4,21 @@ import { useNavigate, useLocation } from 'react-router-dom';
 const Navbar = () => {
     const navigate = useNavigate();
     const location = useLocation();
+
+    const handleLogout = async () => {
+        try {
+            localStorage.clear();
+            await navigate('/');
+            window.location.replace('/'); // Force page reload and navigation
+        } catch (error) {
+            console.error('Logout failed:', error);
+        }
+    };
     return (
         <div className="nav-container">
             <div className="nav">
                 <div className="nav-logo">
-                    <span>BKBK PREMIUM</span>
+                    <span onClick={() => navigate('/customer')}>BKBK PREMIUM</span>
                 </div>
                 <div className="nav-infor">
                     <ul>
@@ -21,12 +31,25 @@ const Navbar = () => {
                             </a>
                         </li>
                         <li>
-                            <a href="#">Lịch sử đặt phòng</a>
+                            <a
+                                className={location.pathname === '/history' ? 'active' : ''}
+                                onClick={() => navigate('/history')}
+                            >
+                                Lịch sử đặt phòng
+                            </a>
                         </li>
                         <li>
-                            <a href="#">Thông tin cá nhân</a>
+                            <a
+                                className={location.pathname === '/profile' ? 'active' : ''}
+                                onClick={() => navigate('/profile')}
+                            >
+                                Thông tin cá nhân
+                            </a>
                         </li>
                     </ul>
+                    <button className="logout-btn" onClick={() => handleLogout()}>
+                        Đăng xuất
+                    </button>
                 </div>
             </div>
         </div>
