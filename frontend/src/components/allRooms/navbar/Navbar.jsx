@@ -14,6 +14,7 @@ const Navbar = () => {
             console.error('Logout failed:', error);
         }
     };
+
     return (
         <div className="nav-container">
             <div className="nav">
@@ -24,24 +25,24 @@ const Navbar = () => {
                     <ul>
                         <li>
                             <a
+                                href="/customer" // Added href here
                                 className={location.pathname === '/customer' ? 'active' : ''}
-                                onClick={() => navigate('/customer')}
                             >
                                 Tìm phòng
                             </a>
                         </li>
                         <li>
                             <a
+                                href="/history" // Added href here
                                 className={location.pathname === '/history' ? 'active' : ''}
-                                onClick={() => navigate('/history')}
                             >
                                 Lịch sử đặt phòng
                             </a>
                         </li>
                         <li>
                             <a
+                                href="/profile" // Added href here
                                 className={location.pathname === '/profile' ? 'active' : ''}
-                                onClick={() => navigate('/profile')}
                             >
                                 Thông tin cá nhân
                             </a>
