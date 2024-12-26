@@ -16,7 +16,7 @@ const LoginPage = () => {
         e.preventDefault();
         try {
             await login(email, password);
-            message.success('Login successful!');
+            message.success('Đăng nhập thành công!');
         } catch (error) {
             if (error.response && error.response.data && error.response.data.error) {
                 setError(error.response.data.error);
@@ -40,7 +40,7 @@ const LoginPage = () => {
             }}
         >
             <Title level={2} style={{ textAlign: 'center', marginBottom: '24px', color: '#1890ff' }}>
-                Login
+                Đăng nhập
             </Title>
             {error && (
                 <p
@@ -91,7 +91,7 @@ const LoginPage = () => {
                         backgroundColor: '#1890ff',
                     }}
                 >
-                    Login
+                    Đăng nhập
                 </Button>
             </form>
 
@@ -109,14 +109,10 @@ const LoginPage = () => {
                     onClick={() => navigate('/register')}
                     style={{ fontSize: '14px', color: '#1890ff' }}
                 >
-                    Don't have an account? Register here
+                    Chưa có tài khoản ? Đăng ký tại đây
                 </Button>
-                <Button
-                    type="link"
-                    onClick={() => navigate('/')}
-                    style={{ fontSize: '14px', color: '#1890ff' }}
-                >
-                    Back to Landing Page
+                <Button type="link" onClick={() => navigate('/')} style={{ fontSize: '14px', color: '#1890ff' }}>
+                    Trở về trang Landing Page
                 </Button>
             </Space>
         </div>

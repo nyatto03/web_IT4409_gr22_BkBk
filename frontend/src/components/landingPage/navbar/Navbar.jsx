@@ -61,10 +61,10 @@ const Navbar = () => {
                 </div>
                 <div className="nav-item">
                     <button className="nav-btn" onClick={() => navigate('/login')}>
-                        Login
+                        Đăng nhập
                     </button>
                     <button className="nav-btn" onClick={() => navigate('/register')}>
-                        Register
+                        Đăng ký
                     </button>
                 </div>
             </div>

@@ -1,4 +1,5 @@
 import './searchItem.css';
+import { useNavigate } from 'react-router-dom';
 import { orderRoom } from '../../../apis';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
@@ -14,7 +15,10 @@ const SearchItem = ({ room }) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [dateRange, setDateRange] = useState([]);
     const [loading, setLoading] = useState(false);
-
+    const navigate = useNavigate();
+    const handleRoomClick = () => {
+        navigate(`/room/${room._id}`);
+    };
     const formatPrice = (price) => {
         return new Intl.NumberFormat('vi-VN', {
             style: 'currency',
@@ -23,7 +27,7 @@ const SearchItem = ({ room }) => {
     };
 
     const getStatusColor = (status) => {
-        return status === 'available' ? 'success' : 'error';
+        return status.toLowerCase() === 'available' ? 'success' : 'error';
     };
     const getRoomTypeLabel = (type) => {
         const types = {
@@ -33,7 +37,8 @@ const SearchItem = ({ room }) => {
         return types[type] || type;
     };
 
-    const handleBook = () => {
+    const handleBook = (event) => {
+        event.stopPropagation();
         const token = localStorage.getItem('token');
         if (!token) {
             message.error('Vui lòng đăng nhập để đặt phòng');
@@ -42,7 +47,8 @@ const SearchItem = ({ room }) => {
         setIsModalVisible(true);
     };
 
-    const handleBookingConfirm = async () => {
+    const handleBookingConfirm = async (event) => {
+        event.stopPropagation();
         if (!dateRange[0] || !dateRange[1]) {
             message.error('Vui lòng chọn ngày nhận và trả phòng');
             return;
@@ -62,6 +68,7 @@ const SearchItem = ({ room }) => {
             );
             message.success('Đặt phòng thành công!');
             setIsModalVisible(false);
+            window.location.reload();
         } catch (error) {
             message.error('Đặt phòng thất bại: ' + error.message);
         } finally {
@@ -69,20 +76,33 @@ const SearchItem = ({ room }) => {
         }
     };
 
+    const handleBookingCancel = (event) => {
+        event.stopPropagation();
+        setIsModalVisible(false);
+    };
+
+    const fixedImages = ['101-2.jpg', '101-5.jpg', '102-4.jpg', '102-5.jpg', '103-1.jpg', '103-4.jpg'];
+    const displayImages = room.images && room.images.length > 0 ? room.images : fixedImages;
+
     return (
-        <div className="searchItem">
+        <div className="searchItem" onClick={handleRoomClick}>
             <div className="siImgContainer">
                 <Swiper
-                    navigation={true}
+                    navigation={{
+                        prevEl: '.swiper-button-prev',
+                        nextEl: '.swiper-button-next',
+                    }}
                     pagination={{ clickable: true }}
                     modules={[Navigation, Pagination]}
                     className="siSwiper"
                 >
-                    {room.images.map((image, index) => (
+                    {displayImages.map((image, index) => (
                         <SwiperSlide key={index}>
                             <img src={`/assets/${image}`} alt={`${room.name} - Ảnh ${index + 1}`} className="siImg" />
                         </SwiperSlide>
                     ))}
+                    <div className="swiper-button-prev" onClick={(e) => e.stopPropagation()} />
+                    <div className="swiper-button-next" onClick={(e) => e.stopPropagation()} />
                 </Swiper>
             </div>
 
@@ -91,7 +111,7 @@ const SearchItem = ({ room }) => {
                     <h1 className="siTitle">{room.name}</h1>
                     <div className="siTags">
                         <Tag color={getStatusColor(room.status)}>
-                            {room.status === 'Available' ? 'Còn trống' : 'Đã được đặt'}
+                            {room.status.toLowerCase() === 'available' ? 'Còn trống' : 'Đã được đặt'}
                         </Tag>
                         {room.room_type.map((type, index) => (
                             <Tag key={index} color="blue">
@@ -105,17 +125,24 @@ const SearchItem = ({ room }) => {
                 <div className="siDetails">
                     <div className="siPrice">{formatPrice(room.price)}/ngày</div>
                     <div className="siTaxOp">Đã bao gồm thuế và phí</div>
-                    <button className="siCheckButton" disabled={room.status !== 'Available'} onClick={handleBook}>
-                        {room.status === 'Available' ? 'Đặt ngay' : 'Đã được đặt'}
+                    <button
+                        className="siCheckButton"
+                        disabled={room.status.toLowerCase() !== 'available'}
+                        onClick={(e) => handleBook(e)}
+                    >
+                        {room.status.toLowerCase() === 'available' ? 'Đặt ngay' : 'Đã được đặt'}
                     </button>
                     <Modal
                         title="Xác nhận đặt phòng"
                         open={isModalVisible}
-                        onOk={handleBookingConfirm}
-                        onCancel={() => setIsModalVisible(false)}
+                        onOk={(e) => handleBookingConfirm(e)}
+                        onCancel={(e) => handleBookingCancel(e)}
                         confirmLoading={loading}
+                        mask={true}
+                        maskClosable={true}
+                        modalRender={(modal) => <div onClick={(e) => e.stopPropagation()}>{modal}</div>}
                     >
-                        <div className="booking-form">
+                        <div className="booking-form" onClick={(e) => e.stopPropagation()}>
                             <p>Chọn ngày nhận phòng và trả phòng:</p>
                             <RangePicker
                                 style={{ width: '100%' }}

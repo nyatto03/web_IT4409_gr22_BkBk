@@ -40,3 +40,49 @@ export const orderRoom = async (user_id, room_id, status, total_price, checkin_d
         throw error;
     }
 };
+
+export const getOrders = async () => {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${API_URL}/orders`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('call api get all rooms failed:', error);
+        throw error;
+    }
+};
+
+export const getRoom = async (id) => {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${API_URL}/rooms/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('call api get all rooms failed:', error);
+        throw error;
+    }
+};
+
+export const editUser = async (updateData) => {
+    console.log('🚀 ~ editUser ~ updateData:', updateData);
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.put(`${API_URL}/users/userId/${updateData.id}`, updateData, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('call api get all rooms failed:', error);
+        throw error;
+    }
+};

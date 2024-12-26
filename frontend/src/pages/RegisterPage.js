@@ -16,7 +16,7 @@ const RegisterPage = () => {
         try {
             console.log('Register values:', values);
             await register(name, email, password, phone, address);
-            message.success('Registration successful!');
+            message.success('Đăng ký thành công!');
             navigate('/login');
         } catch (error) {
             message.error('Registration failed. Please try again.');
@@ -37,7 +37,7 @@ const RegisterPage = () => {
             }}
         >
             <Title level={2} style={{ textAlign: 'center', marginBottom: '24px', color: '#1890ff' }}>
-                Register
+                Đăng ký
             </Title>
             <Form
                 name="register"
@@ -48,11 +48,11 @@ const RegisterPage = () => {
             >
                 <Form.Item
                     name="name"
-                    label="Full Name"
-                    rules={[{ required: true, message: 'Please input your full name!' }]}
+                    label="Họ và tên"
+                    rules={[{ required: true, message: 'Nhập họ và tên của bạn!' }]}
                 >
                     <Input
-                        placeholder="Enter your full name"
+                        placeholder="Nhập họ và tên của bạn"
                         style={{ height: 45, borderRadius: '8px', fontSize: '16px' }}
                     />
                 </Form.Item>
@@ -60,46 +60,39 @@ const RegisterPage = () => {
                 <Form.Item
                     name="email"
                     label="Email"
-                    rules={[{ required: true, type: 'email', message: 'Please input a valid email!' }]}
+                    rules={[{ required: true, type: 'email', message: 'Nhập email hợp lệ!' }]}
                 >
                     <Input
-                        placeholder="Enter your email"
+                        placeholder="Nhập email của bạn"
                         style={{ height: 45, borderRadius: '8px', fontSize: '16px' }}
                     />
                 </Form.Item>
 
                 <Form.Item
                     name="password"
-                    label="Password"
-                    rules={[{ required: true, message: 'Please input your password!' }]}
+                    label="Mật khẩu"
+                    rules={[{ required: true, message: 'Nhập mật khẩu!' }]}
                     hasFeedback
                 >
                     <Input.Password
-                        placeholder="Enter your password"
+                        placeholder="Nhập mật khẩu"
                         style={{ height: 45, borderRadius: '8px', fontSize: '16px' }}
                     />
                 </Form.Item>
 
                 <Form.Item
                     name="phone"
-                    label="Phone"
-                    rules={[{ required: true, message: 'Please input your phone number!' }]}
+                    label="Số điện thoại"
+                    rules={[{ required: true, message: 'Nhập số điện thoại!' }]}
                 >
                     <Input
-                        placeholder="Enter your phone number"
+                        placeholder="Nhập số điện thoại"
                         style={{ height: 45, borderRadius: '8px', fontSize: '16px' }}
                     />
                 </Form.Item>
 
-                <Form.Item
-                    name="address"
-                    label="Address"
-                    rules={[{ required: true, message: 'Please input your address!' }]}
-                >
-                    <Input
-                        placeholder="Enter your address"
-                        style={{ height: 45, borderRadius: '8px', fontSize: '16px' }}
-                    />
+                <Form.Item name="address" label="Địa chỉ" rules={[{ required: true, message: 'Nhập địa chỉ!' }]}>
+                    <Input placeholder="Nhập địa chỉ" style={{ height: 45, borderRadius: '8px', fontSize: '16px' }} />
                 </Form.Item>
 
                 <Form.Item>
@@ -115,7 +108,7 @@ const RegisterPage = () => {
                             backgroundColor: '#1890ff',
                         }}
                     >
-                        Register
+                        Đăng ký
                     </Button>
                 </Form.Item>
             </Form>
@@ -129,19 +122,11 @@ const RegisterPage = () => {
                     alignItems: 'center',
                 }}
             >
-                <Button
-                    type="link"
-                    onClick={() => navigate('/login')}
-                    style={{ fontSize: '14px', color: '#1890ff' }}
-                >
-                    Already have an account? Login here
+                <Button type="link" onClick={() => navigate('/login')} style={{ fontSize: '14px', color: '#1890ff' }}>
+                    Đã có tài khoản? Đăng nhập tại đây
                 </Button>
-                <Button
-                    type="link"
-                    onClick={() => navigate('/')}
-                    style={{ fontSize: '14px', color: '#1890ff' }}
-                >
-                    Back to Landing Page
+                <Button type="link" onClick={() => navigate('/')} style={{ fontSize: '14px', color: '#1890ff' }}>
+                    Trở về trang Landing Page
                 </Button>
             </Space>
         </div>
