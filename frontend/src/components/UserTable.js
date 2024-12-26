@@ -39,6 +39,11 @@ const UserTable = () => {
         user._id === userId ? { ...user, role: newRole } : user
       )
     );
+    setFilteredUsers(prevFilteredUsers =>
+      prevFilteredUsers.map(user =>
+        user._id === userId ? { ...user, role: newRole } : user
+      )
+    );
   };
 
   const handleUpdateRole = async (userId, newRole) => {

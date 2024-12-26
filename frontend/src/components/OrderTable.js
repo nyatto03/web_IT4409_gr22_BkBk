@@ -70,6 +70,7 @@ const OrderTable = () => {
             }
 
             const response = await apiClient.put(`/orders/${orderId}`, { status: newStatus });
+            fetchOrders();
             message.success(response.data.message);
 
             setOrders((prevOrders) =>

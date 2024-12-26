@@ -191,8 +191,6 @@ const RoomTable = () => {
                             }
                         >
                             <Select.Option value="available">available</Select.Option>
-                            <Select.Option value="pending">pending</Select.Option>
-                            <Select.Option value="confirmed">confirmed</Select.Option>
                             <Select.Option value="maintenance">maintenance</Select.Option>
                         </Select>
                     </Form.Item>
