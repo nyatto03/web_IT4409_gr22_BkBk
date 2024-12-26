@@ -84,7 +84,7 @@ const Dashboard = () => {
     return (
         <div>
             <Row gutter={16} style={{ marginBottom: 20 }}>
-                <Col span={8}>
+                <Col span={3}>
                     <Select
                         placeholder="Filter by status"
                         value={statusFilter}
@@ -98,7 +98,7 @@ const Dashboard = () => {
                         <Select.Option value="canceled">Canceled</Select.Option>
                     </Select>
                 </Col>
-                <Col span={4}>
+                <Col span={2}>
                     <Button
                         type="default"
                         icon={<SearchOutlined />}

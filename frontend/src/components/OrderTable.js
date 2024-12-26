@@ -145,7 +145,7 @@ const OrderTable = () => {
             title: 'Total Price',
             dataIndex: 'total_price',
             key: 'total_price',
-            render: (price) => `${price?.toLocaleString()} USD`,
+            render: (price) => `${price?.toLocaleString()} VND`,
         },
     ];
 

@@ -91,7 +91,7 @@ const RoomTable = () => {
         },
         { title: 'Room Name', dataIndex: 'name', key: 'name' },
         { title: 'Description', dataIndex: 'description', key: 'description' },
-        { title: 'Price', dataIndex: 'price', key: 'price', render: (price) => `${price?.toLocaleString()} USD` },
+        { title: 'Price', dataIndex: 'price', key: 'price', render: (price) => `${price?.toLocaleString()} VND` },
         { title: 'Status', dataIndex: 'status', key: 'status' },
         {
             title: 'Actions',
